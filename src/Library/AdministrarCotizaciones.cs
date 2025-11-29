@@ -73,51 +73,7 @@ namespace ClassLibrary
         return resultados;
     }
     
-    public List<Cotizacion> BuscarCotizacionesComoUsuario(
-        Usuario usuario, string criterio, DateTime? fecha, DateTime? fechaLimite)
-    {
-        if (usuario == null)
-            throw new ArgumentNullException(nameof(usuario), "El usuario no puede ser nulo.");
-
-        if (string.IsNullOrWhiteSpace(criterio) && !fecha.HasValue && !fechaLimite.HasValue)
-            throw new InvalidOperationException("Debe ingresar al menos un criterio de búsqueda.");
-
-        List<Cotizacion> resultados = new List<Cotizacion>();
-
-        foreach (Cotizacion cotizacion in usuario.ListaCotizaciones)
-        {
-            bool coincide = true;
-
-            if (!string.IsNullOrWhiteSpace(criterio))
-            {
-                string crit = criterio.ToLower();
-
-                coincide &= 
-                    cotizacion.ClienteDestino.Nombre.ToLower().Contains(crit) ||
-                    cotizacion.ClienteDestino.Apellido.ToLower().Contains(crit) ||
-                    cotizacion.ClienteDestino.Genero.ToLower().Contains(crit) ||
-                    cotizacion.ClienteDestino.Telefono.Contains(crit) ||
-                    cotizacion.ClienteDestino.Email.Contains(crit) ||
-                    cotizacion.UsuarioCreador.Nombre.ToLower().Contains(crit) ||
-                    cotizacion.UsuarioCreador.Apellido.ToLower().Contains(crit) ||
-                    cotizacion.UsuarioCreador.Telefono.Contains(crit) ||
-                    cotizacion.UsuarioCreador.Email.Contains(crit);
-            }
-
-            if (fecha.HasValue)
-                coincide &= cotizacion.Fecha.Date == fecha.Value.Date;
-
-            if (fechaLimite.HasValue)
-                coincide &= cotizacion.FechaLimite.Date == fechaLimite.Value.Date;
-
-            if (coincide)
-                resultados.Add(cotizacion);
-        }
-
-        return resultados;
-    }
-
-    public List<Cotizacion> BuscarCotizacionComoUsuario(Usuario usuario, string criterio, DateTime? fecha,
+    public List<Cotizacion> BuscarCotizacionesComoUsuario(Usuario usuario, string criterio, DateTime? fecha,
         DateTime? fechaLimite)
     {
         if (usuario == null)
