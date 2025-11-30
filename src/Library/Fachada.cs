@@ -187,5 +187,21 @@ public class Fachada
     {
         return AdministrarVentas.Instancia.BuscarVentaComoUsuario(usuario, criterio, fecha);
     }
-    
+
+    public void DelegarAgregarProducto(Venta venta, string nombre, double precio, int cantidad)
+    {
+        AdministrarVentas.Instancia.AgregarProducto(venta, nombre, precio, cantidad);
+    }
+
+    public void DelegarCerrarVenta(Venta venta)
+    {
+        AdministrarVentas.Instancia.CerrarVenta(venta);
+    }
+
+    public double DelegarObtenerTotalVentasPeriodo(Usuario usuario, DateTime inicio, DateTime fin)
+    {
+        return AdministrarVentas.Instancia.ObtenerTotalVentasPeriodo(usuario, inicio, fin);
+    }
+
+
 }

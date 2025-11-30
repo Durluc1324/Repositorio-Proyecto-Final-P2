@@ -10,12 +10,12 @@ namespace ClassLibrary
     public static AdministrarInteracciones Instancia => _instancia;
 
     // Lista interna
-    private readonly List<Interaccion> _interacciones;
+    private readonly List<Interaccion> _interacciones = new List<Interaccion>();
 
     // Constructor privado
     private AdministrarInteracciones()
     {
-        _interacciones = new List<Interaccion>();
+        
     }
 
 
@@ -146,6 +146,16 @@ namespace ClassLibrary
         }
 
         return pendientes;
+    }
+    
+    public void LimpiarParaTest()
+    {
+        _interacciones.Clear();
+    }
+
+    public List<Interaccion> Interacciones()
+    {
+        return _interacciones;
     }
 
 

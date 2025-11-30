@@ -76,7 +76,7 @@ namespace ClassLibrary
             // Revisar nombre, apellido, email y teléfono
 
             // Revisar etiquetas
-            if (!coincide && c.Etiquetas.Count<0)
+            if (!coincide && c.Etiquetas.Count>0)
             {
                 foreach (string etiqueta in c.Etiquetas)
                 {
@@ -100,7 +100,8 @@ namespace ClassLibrary
     {
         if (cliente.UsuarioAsignado != solicitante && solicitante.Rol != TipoRol.ADMINISTRADOR)
             throw new UnauthorizedAccessException("No puede agregar etiquetas a este cliente.");
-
+        if (solicitante.Suspendido)
+            throw new InvalidOperationException("Usuario suspendido.");
         if (!cliente.Etiquetas.Contains(etiqueta))
             cliente.Etiquetas.Add(etiqueta);
     }
@@ -115,6 +116,16 @@ namespace ClassLibrary
         vendedor.ClientesAsignados.Remove(cliente);
         vendedorNuevo.ClientesAsignados.Add(cliente);
         cliente.UsuarioAsignado = vendedorNuevo;
+    }
+
+    public void LimpiarParaTest()
+    {
+        _clientes.Clear();
+    }
+
+    public List<Cliente> Clientes()
+    {
+        return _clientes;
     }
 }
 }
