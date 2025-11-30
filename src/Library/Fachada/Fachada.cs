@@ -5,7 +5,11 @@ namespace ClassLibrary;
 
 public class Fachada
 {
+
+    private static readonly Fachada _fachada = new Fachada();
+    public static Fachada FachadaSistema => _fachada;
     //Llamada a métodos de AdminsitrarCLientes.
+    
 
     public Cliente DelegarCrearCliente(Usuario solicitante, string nombre, string apellido, string email,
         string telefono,
