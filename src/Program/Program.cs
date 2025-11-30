@@ -13,7 +13,11 @@ namespace ConsoleApplication
     {
         static void Main()
         {
-            Console.WriteLine("Hello, World!");
+            Administrador admin = new Administrador("Luciano", "Rodriguez", "luciano.rodriguez@gmail.com",
+                "0938414342");
+            
+            AdministrarClientes.Instancia.CrearCliente(admin, "Tom", "Rodriguez", "tom.rodr@gmail.com",
+                "92847143", "Hombre", new DateTime(2006, 02, 27));
         }
     }
 }

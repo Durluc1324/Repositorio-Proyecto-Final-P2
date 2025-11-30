@@ -60,10 +60,10 @@ namespace ClassLibrary
 
         foreach (Cotizacion cotizacion in _cotizaciones)
         {
-            if (cotizacion.ClienteDestino.Nombre == criterio || cotizacion.ClienteDestino.Apellido == criterio ||
-                cotizacion.ClienteDestino.Telefono == criterio || cotizacion.ClienteDestino.Email == criterio ||
-                cotizacion.UsuarioCreador.Nombre == criterio || cotizacion.UsuarioCreador.Apellido == criterio ||
-                cotizacion.UsuarioCreador.Email == criterio || cotizacion.UsuarioCreador.Telefono == criterio || 
+            if (cotizacion.ClienteDestino.Nombre.Equals(criterio, StringComparison.OrdinalIgnoreCase) || cotizacion.ClienteDestino.Apellido.Equals(criterio,StringComparison.OrdinalIgnoreCase) ||
+                cotizacion.ClienteDestino.Telefono.Equals(criterio, StringComparison.OrdinalIgnoreCase) || cotizacion.ClienteDestino.Email.Equals(criterio, StringComparison.OrdinalIgnoreCase) ||
+                cotizacion.UsuarioCreador.Nombre.Equals(criterio, StringComparison.OrdinalIgnoreCase) || cotizacion.UsuarioCreador.Apellido.Equals(criterio, StringComparison.OrdinalIgnoreCase) ||
+                cotizacion.UsuarioCreador.Email.Equals(criterio, StringComparison.OrdinalIgnoreCase) || cotizacion.UsuarioCreador.Telefono.Equals(criterio, StringComparison.OrdinalIgnoreCase) || 
                 cotizacion.Fecha == fecha || cotizacion.FechaLimite == fechaLimite)
             {
                 resultados.Add(cotizacion);
@@ -109,6 +109,16 @@ namespace ClassLibrary
         
         return resultados;
     }
+    // solo para los Tests
     
+    public void LimpiarParaTest()
+    {
+        _cotizaciones.Clear();
+    }
+
+    public List<Cotizacion> Cotizaciones()
+    {
+        return _cotizaciones;
+    }
 }
 }

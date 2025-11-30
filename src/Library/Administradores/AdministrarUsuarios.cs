@@ -19,7 +19,7 @@ namespace ClassLibrary
 
 
     // Crear usuario (solo admin)
-    public void CrearUsuario(Usuario solicitante, string nombre, string apellido, string email, string telefono, TipoRol rol)
+    public Usuario CrearUsuario(Usuario solicitante, string nombre, string apellido, string email, string telefono, TipoRol rol)
     {
         if (solicitante.Rol != TipoRol.ADMINISTRADOR)
             throw new UnauthorizedAccessException("Solo administradores pueden crear usuarios.");
@@ -29,6 +29,8 @@ namespace ClassLibrary
             : new Vendedor(nombre, apellido, email, telefono);
 
         _usuarios.Add(nuevoUsuario);
+
+        return nuevoUsuario;
     }
 
     public void EliminarUsuario(Usuario solicitante, Usuario usuario)
@@ -63,6 +65,16 @@ namespace ClassLibrary
         if (solicitante.Rol != TipoRol.ADMINISTRADOR)
             throw new UnauthorizedAccessException("Solo administradores pueden ver todos los usuarios.");
 
+        return _usuarios;
+    }
+    
+    public void LimpiarParaTest()
+    {
+        _usuarios.Clear();
+    }
+
+    public List<Usuario> Usuarios()
+    {
         return _usuarios;
     }
 }

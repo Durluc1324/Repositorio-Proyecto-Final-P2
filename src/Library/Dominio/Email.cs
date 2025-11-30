@@ -33,7 +33,7 @@ namespace ClassLibrary
             {
                 return otroEmail.Emisor == this.Receptor &&
                        otroEmail.Receptor == this.Emisor &&
-                       otroEmail.Fecha > this.Fecha;
+                       otroEmail.Fecha < this.Fecha;
             }
 
             return false;

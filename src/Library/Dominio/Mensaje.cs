@@ -29,7 +29,7 @@ public class Mensaje: Interaccion, IRespondible
         {
             return otroMensaje.Emisor == this.Receptor &&
                    otroMensaje.Receptor == this.Emisor &&
-                   otroMensaje.Fecha > this.Fecha;
+                   otroMensaje.Fecha < this.Fecha;
         }
 
         return false;

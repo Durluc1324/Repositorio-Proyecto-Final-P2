@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ClassLibrary.Excepciones;
 
 namespace ClassLibrary
 {
@@ -18,10 +19,10 @@ namespace ClassLibrary
 
     public Venta CrearVenta(Usuario usuario, Cliente cliente, DateTime fecha)
     {
-        if (usuario == null) throw new ArgumentNullException(nameof(usuario));
-        if (cliente == null) throw new ArgumentNullException(nameof(cliente));
+            ArgumentNullException.ThrowIfNull(usuario);
+            ArgumentNullException.ThrowIfNull(cliente);
 
-        Venta nueva = new Venta(cliente, usuario, fecha);
+            Venta nueva = new Venta(cliente, usuario, fecha);
         _ventas.Add(nueva);
         return nueva;
     }
@@ -117,9 +118,9 @@ namespace ClassLibrary
             {
                 string c = criterio.ToLower();
                 coincide &= 
-                    venta.ClienteComprador.Nombre.ToLower().Contains(c) ||
-                    venta.ClienteComprador.Apellido.ToLower().Contains(c) ||
-                    venta.UsuarioVendedor.Nombre.ToLower().Contains(c);
+                    venta.ClienteComprador.Nombre.Contains(c, StringComparison.CurrentCultureIgnoreCase) ||
+                    venta.ClienteComprador.Apellido.Contains(c, StringComparison.CurrentCultureIgnoreCase) ||
+                    venta.UsuarioVendedor.Nombre.Contains(c, StringComparison.CurrentCultureIgnoreCase);
             }
 
             if (fecha.HasValue)
@@ -172,11 +173,11 @@ namespace ClassLibrary
             criterio = criterio.ToLower();
 
             bool coincideTexto =
-                venta.ClienteComprador.Nombre.ToLower().Contains(criterio) ||
-                venta.ClienteComprador.Apellido.ToLower().Contains(criterio) ||
-                venta.ClienteComprador.Genero.ToLower().Contains(criterio) ||
-                venta.ClienteComprador.Email.ToLower().Contains(criterio) ||
-                venta.ClienteComprador.Telefono.ToLower().Contains(criterio);
+                venta.ClienteComprador.Nombre.Contains(criterio, StringComparison.CurrentCultureIgnoreCase) ||
+                venta.ClienteComprador.Apellido.Contains(criterio, StringComparison.CurrentCultureIgnoreCase) ||
+                venta.ClienteComprador.Genero.Contains(criterio, StringComparison.CurrentCultureIgnoreCase) ||
+                venta.ClienteComprador.Email.Contains(criterio, StringComparison.CurrentCultureIgnoreCase) ||
+                venta.ClienteComprador.Telefono.Contains(criterio, StringComparison.CurrentCultureIgnoreCase);
 
             coincide &= coincideTexto;
         }
@@ -187,6 +188,64 @@ namespace ClassLibrary
         return coincide;
     }
 
+    public void AgregarProducto(Venta venta, string nombre, double precio, int cantidad)
+    {
+            ArgumentNullException.ThrowIfNull(venta);
+
+            if (venta.VentaCerrada)
+                throw new VentaCerradaException();
+
+            if (string.IsNullOrWhiteSpace(nombre))
+                throw new ArgumentException("Nombre del producto inválido.");
+
+            if (precio <= 0)
+                throw new ArgumentException("El precio debe ser mayor que cero.");
+
+            if (cantidad <= 0)
+                throw new ArgumentException("La cantidad debe ser mayor que cero.");
+
+            if (venta.VentaCerrada)
+                throw new InvalidOperationException("No se pueden agregar productos a una venta cerrada.");
+
+            Producto producto = new Producto(nombre, precio);
+            venta.AgregarProducto(producto, cantidad);
+    }
+    
+    public void CerrarVenta(Venta venta)
+    {
+        ArgumentNullException.ThrowIfNull(venta);
+        venta.CerrarVenta();
+    }
+    
+    public double ObtenerTotalVentasPeriodo(Usuario usuario, DateTime inicio, DateTime fin)
+    {
+        if (usuario == null)
+            throw new UsuarioNuloException();
+        
+
+        double total = 0;
+
+        foreach (var venta in usuario.ListaVentas)
+        {
+            if (venta.Fecha >= inicio && venta.Fecha <= fin)
+            {
+                total += venta.Total;
+            }
+        }
+
+        return total;
+    }
+
+    
+    public void LimpiarParaTest()
+    {
+        _ventas.Clear();
+    }
+
+    public List<Venta> Ventas()
+    {
+        return _ventas;
+    }
     
 }
 }
