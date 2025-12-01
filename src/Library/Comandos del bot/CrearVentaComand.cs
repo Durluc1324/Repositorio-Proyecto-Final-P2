@@ -21,21 +21,18 @@ public async Task CrearVentaAsync(string mensaje)
     {
         string[] partes = mensaje.Split(" ");
 
-        // VALIDACIÓN 1: mínimo 4 partes (correo + 1 producto)
         if (partes.Length < 4)
         {
             await ReplyAsync("Formato incorrecto. Usa: `!crearventa correo producto precio cantidad ...`");
             return;
         }
 
-        // VALIDACIÓN 2: debe ser 1 + múltiplo de 3
         if ((partes.Length - 1) % 3 != 0)
         {
             await ReplyAsync("Formato incorrecto. Después del correo, cada producto debe tener: nombre precio cantidad.");
             return;
         }
 
-        // 1. Obtener usuario logueado
         Usuario vendedor = sessions.GetUsuario(Context.User.Id);
         if (vendedor == null)
         {
@@ -43,7 +40,6 @@ public async Task CrearVentaAsync(string mensaje)
             return;
         }
 
-        // 2. Buscar cliente por email
         Cliente cliente = vendedor.ClientesAsignados
             .FirstOrDefault(c => c.Email == partes[0]);
 
@@ -56,19 +52,16 @@ public async Task CrearVentaAsync(string mensaje)
         // 3. Crear la venta
         Venta venta = Fachada.FachadaSistema.DelegarCrearVenta(vendedor, cliente, DateTime.Now);
 
-        // 4. Agregar productos
         for (int i = 1; i < partes.Length; i += 3)
         {
             string nombre = partes[i];
 
-            // VALIDACIÓN 3: precio válido
             if (!double.TryParse(partes[i + 1], out double precio))
             {
                 await ReplyAsync($"El precio `{partes[i + 1]}` no es un número válido.");
                 return;
             }
 
-            // VALIDACIÓN 4: cantidad válida
             if (!int.TryParse(partes[i + 2], out int cantidad))
             {
                 await ReplyAsync($"La cantidad `{partes[i + 2]}` no es un número válido.");

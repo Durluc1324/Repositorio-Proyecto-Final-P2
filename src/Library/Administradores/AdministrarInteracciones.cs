@@ -30,19 +30,26 @@ namespace ClassLibrary
         return llamada;
     }
 
-    public Mensaje CrearMensaje(Usuario emisor, Persona receptor, DateTime fecha, string tema)
+    public Mensaje CrearMensaje(Persona emisor, Persona receptor, DateTime fecha, string tema)
     {
-        ValidarUsuario(emisor);
+        if (emisor is Usuario u)
+        {
+            ValidarUsuario(u);
+        }
+
 
         var mensaje = new Mensaje(emisor, receptor, fecha, tema);
         _interacciones.Add(mensaje);
         return mensaje;
     }
 
-    public Email CrearEmail(Usuario emisor, Persona receptor, DateTime fecha, string tema, string contenido)
+    public Email CrearEmail(Persona emisor, Persona receptor, DateTime fecha, string tema, string contenido)
     {
-        ValidarUsuario(emisor);
-
+        if (emisor is Usuario u)
+        {
+            ValidarUsuario(u);
+        }
+        
         var email = new Email(emisor, receptor, fecha, tema, contenido);
         _interacciones.Add(email);
         return email;
@@ -75,6 +82,11 @@ namespace ClassLibrary
         }
 
         return resultado;
+    }
+
+    public List<Interaccion> ObtenerInteraccionesDe(Usuario usuario)
+    {
+        return usuario.ListaInteracciones;
     }
 
     // ---------- MÉTODOS DE MODIFICACIÓN ----------

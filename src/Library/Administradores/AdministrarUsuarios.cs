@@ -21,23 +21,23 @@ namespace ClassLibrary
 
 
     // Crear usuario (solo admin)
-    public Usuario CrearUsuario(Usuario solicitante, string nombre, string apellido, string email, string telefono, string contraseña, TipoRol rol)
+    public Usuario CrearUsuario(Usuario solicitante, string nombre, string apellido, string email, string telefono, string contraseña, string rol)
     {
         if (solicitante.Rol != TipoRol.ADMINISTRADOR)
             throw new UnauthorizedAccessException("Solo administradores pueden crear usuarios.");
         Usuario nuevoUsuario = null;
-        if (rol == TipoRol.USUARIO)
+        if (rol.Equals("usuario", StringComparison.OrdinalIgnoreCase))
         {
-            nuevoUsuario = new Usuario(nombre, apellido, email, telefono, contraseña, rol);
+            nuevoUsuario = new Usuario(nombre, apellido, email, telefono, contraseña, TipoRol.USUARIO);
 
         }
 
-        if (rol == TipoRol.VENDEDOR)
+        if (rol.Equals("vendedor", StringComparison.OrdinalIgnoreCase))
         {
             nuevoUsuario = new Vendedor(nombre, apellido, email, telefono, contraseña);
         }
 
-        if (rol == TipoRol.ADMINISTRADOR)
+        if (rol.Equals("administrador", StringComparison.OrdinalIgnoreCase))
         {
             nuevoUsuario = new Administrador(nombre, apellido, email, telefono, contraseña);
         }
@@ -107,6 +107,24 @@ namespace ClassLibrary
     {
         _usuarios.Add(new Administrador(nombre, apellido, email, telefono, contraseña));
     }
+
+    public Usuario BuscarUsuario(string criterio)
+    {
+        Usuario usuarioEncontrado = null;
+
+        foreach (Usuario usuario in _usuarios)
+        {
+            if (usuario.Nombre.Equals(criterio, StringComparison.OrdinalIgnoreCase) ||
+                usuario.Apellido.Equals(criterio, StringComparison.OrdinalIgnoreCase)||
+                usuario.Telefono.Equals(criterio, StringComparison.OrdinalIgnoreCase)||
+                usuario.Email.Equals(criterio, StringComparison.OrdinalIgnoreCase))
+                usuarioEncontrado = usuario;
+        }
+        
+        return usuarioEncontrado;
+    }
+    
+    
     
     public void LimpiarParaTest()
     {

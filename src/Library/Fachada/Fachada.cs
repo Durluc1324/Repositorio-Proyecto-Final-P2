@@ -86,17 +86,23 @@ public class Fachada
 
     //Llamada a métodos de AdminisitrarInteracciones
 
+    public List<Interaccion> DelegarObtenerInteraccionesDe(Usuario usuario)
+    {
+        return AdministrarInteracciones.Instancia.ObtenerInteraccionesDe(usuario);
+    }
+
+
     public Llamada DelegarCrearLlamada(Usuario emisor, Persona receptor, DateTime fecha, string tema)
     {
         return AdministrarInteracciones.Instancia.CrearLlamada(emisor, receptor, fecha, tema);
     }
 
-    public Mensaje DelegarCrearMensaje(Usuario emisor, Persona receptor, DateTime fecha, string tema)
+    public Mensaje DelegarCrearMensaje(Persona emisor, Persona receptor, DateTime fecha, string tema)
     {
         return AdministrarInteracciones.Instancia.CrearMensaje(emisor, receptor, fecha, tema);
     }
 
-    public Email DelegarCrearEmail(Usuario emisor, Persona receptor, DateTime fecha, string tema, string contenido)
+    public Email DelegarCrearEmail(Persona emisor, Persona receptor, DateTime fecha, string tema, string contenido)
     {
         return AdministrarInteracciones.Instancia.CrearEmail(emisor, receptor, fecha, tema, contenido);
     }
@@ -128,7 +134,7 @@ public class Fachada
 
     //Llamada a métodos de AdministrarUsuarios
 
-    public Usuario DelegarCrearUsuario(Usuario solicitante, string nombre, string apellido, string email, string telefono, string contraseña, TipoRol rol)
+    public Usuario DelegarCrearUsuario(Usuario solicitante, string nombre, string apellido, string email, string telefono, string contraseña, string rol)
 
     {
         return AdministrarUsuarios.Instancia.CrearUsuario(solicitante, nombre, apellido, email, telefono, contraseña, rol);
@@ -158,6 +164,27 @@ public class Fachada
     {
        return AdministrarUsuarios.Instancia.Login(emailOTelefono, contraseña);
     }
+
+    public Usuario DelegarBuscarUsuario(string criterio)
+    {
+        return AdministrarUsuarios.Instancia.BuscarUsuario(criterio);
+    }
+
+    public Persona BuscarPersona(string criterio)
+    {
+        var clientes = AdministrarClientes.Instancia.BuscarClientes(criterio);
+    
+        if (clientes.Count == 1)
+            return clientes[0];
+    
+        var usuario = AdministrarUsuarios.Instancia.BuscarUsuario(criterio);
+        if (usuario != null)
+            return usuario;
+
+        return null;
+    }
+
+
         
         
     //Llamada a AdministrarVentas
