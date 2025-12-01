@@ -124,10 +124,10 @@ public class Fachada
 
     //Llamada a métodos de AdministrarUsuarios
 
-    public void DelegarCrearUsuario(Usuario solicitante, string nombre, string apellido,
-        string email, string telefono, TipoRol rol)
+    public Usuario CrearUsuario(Usuario solicitante, string nombre, string apellido, string email, string telefono, string contraseña, TipoRol rol)
+
     {
-        AdministrarUsuarios.Instancia.CrearUsuario(solicitante, nombre, apellido, email, telefono, rol);
+        return AdministrarUsuarios.Instancia.CrearUsuario(solicitante, nombre, apellido, email, telefono, contraseña, rol);
     }
 
     public void DelegarEliminarUsuario(Usuario solicitante, Usuario usuario)
@@ -150,6 +150,12 @@ public class Fachada
         return AdministrarUsuarios.Instancia.VerTodos(solicitante);
     }
 
+    public Usuario DelegarLogin(string emailOTelefono, string contraseña)
+    {
+       return AdministrarUsuarios.Instancia.Login(emailOTelefono, contraseña);
+    }
+        
+        
     //Llamada a AdministrarVentas
 
     public Venta DelegarCrearVenta(Usuario usuario, Cliente cliente, DateTime fecha)

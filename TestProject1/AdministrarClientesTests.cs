@@ -20,8 +20,8 @@ public class AdministrarClientesTests
         otroVendedor = new Vendedor("V", "Dos", "v2@test.com", "091000002");
 
         // Registrar usuarios en el admin (si lo necesitás)
-        AdministrarUsuarios.Instancia.CrearUsuario(admin, vendedor.Nombre, vendedor.Apellido, vendedor.Email, vendedor.Telefono, TipoRol.VENDEDOR);
-        AdministrarUsuarios.Instancia.CrearUsuario(admin, otroVendedor.Nombre, otroVendedor.Apellido, otroVendedor.Email, otroVendedor.Telefono, TipoRol.VENDEDOR);
+        AdministrarUsuarios.Instancia.CrearUsuario(admin, vendedor.Nombre, vendedor.Apellido, vendedor.Email, vendedor.Telefono, "1234",TipoRol.VENDEDOR);
+        AdministrarUsuarios.Instancia.CrearUsuario(admin, otroVendedor.Nombre, otroVendedor.Apellido, otroVendedor.Email, otroVendedor.Telefono, "1234",TipoRol.VENDEDOR);
     }
 
     [TestCleanup]

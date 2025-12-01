@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using ClassLibrary.Excepciones;
 
 namespace ClassLibrary
 {
@@ -19,19 +21,30 @@ namespace ClassLibrary
 
 
     // Crear usuario (solo admin)
-    public Usuario CrearUsuario(Usuario solicitante, string nombre, string apellido, string email, string telefono, TipoRol rol)
+    public Usuario CrearUsuario(Usuario solicitante, string nombre, string apellido, string email, string telefono, string contraseña, TipoRol rol)
     {
         if (solicitante.Rol != TipoRol.ADMINISTRADOR)
             throw new UnauthorizedAccessException("Solo administradores pueden crear usuarios.");
+        Usuario nuevoUsuario = null;
+        if (rol == TipoRol.USUARIO)
+        {
+            nuevoUsuario = new Usuario(nombre, apellido, email, telefono, contraseña, rol);
 
-        Usuario nuevoUsuario = rol == TipoRol.ADMINISTRADOR
-            ? new Administrador(nombre, apellido, email, telefono)
-            : new Vendedor(nombre, apellido, email, telefono);
+        }
 
+        if (rol == TipoRol.VENDEDOR)
+        {
+            nuevoUsuario = new Vendedor(nombre, apellido, email, telefono, contraseña);
+        }
+
+        if (rol == TipoRol.ADMINISTRADOR)
+        {
+            nuevoUsuario = new Administrador(nombre, apellido, email, telefono, contraseña);
+        }
         _usuarios.Add(nuevoUsuario);
-
         return nuevoUsuario;
     }
+    
 
     public void EliminarUsuario(Usuario solicitante, Usuario usuario)
     {
@@ -66,6 +79,33 @@ namespace ClassLibrary
             throw new UnauthorizedAccessException("Solo administradores pueden ver todos los usuarios.");
 
         return _usuarios;
+    }
+
+    public Usuario Login(string emailOTelefono, string contraseña)
+    {
+        if (string.IsNullOrWhiteSpace(emailOTelefono))
+            throw new DatoNuloException("Debe ingresar email o teléfono.");
+
+        if (string.IsNullOrWhiteSpace(contraseña))
+            throw new DatoNuloException("Debe ingresar la contraseña.");
+
+        Usuario usuario = _usuarios.FirstOrDefault(u =>
+            (u.Email.Equals(emailOTelefono.Trim(), StringComparison.OrdinalIgnoreCase) ||
+             u.Telefono.Equals(emailOTelefono.Trim(),StringComparison.OrdinalIgnoreCase))
+            && u.Contraseña == contraseña);
+
+        if (usuario == null)
+            throw new CredencialesInvalidasException("Credenciales incorrectas.");
+
+        if (usuario.Suspendido)
+            throw new UsuarioSuspendidoException();
+
+        return usuario;
+    }
+
+    public void AgregarAdministrador(string nombre, string apellido, string email, string telefono, string contraseña)
+    {
+        _usuarios.Add(new Administrador(nombre, apellido, email, telefono, contraseña));
     }
     
     public void LimpiarParaTest()
