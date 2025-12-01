@@ -6,6 +6,12 @@ namespace ClassLibrary
             : base(nombre, apellido, email, telefono, TipoRol.ADMINISTRADOR)
         {
         }
+
+        public Administrador(string nombre, string apellido, string email, string telefono, string contraseña) :
+            base(nombre, apellido, email, telefono, contraseña,TipoRol.ADMINISTRADOR)
+        {
+            
+        }
     
     }
 }

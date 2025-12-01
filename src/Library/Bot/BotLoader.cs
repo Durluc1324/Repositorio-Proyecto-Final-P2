@@ -1,58 +1,65 @@
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using Discord.Commands;
+using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-namespace ClassLibrary;
 
-/// <summary>
-/// Esta clase ejecuta el bot de Discord hasta que en la terminal donde se
-/// ejecuta el bot se oprime la tecla 'Q'.
-/// </summary>
-public static class BotLoader
+namespace ClassLibrary
 {
-    public static async Task LoadAsync()
+    public static class BotLoader
     {
-        var configuration = new ConfigurationBuilder()
-            .AddUserSecrets(Assembly.GetExecutingAssembly())
-            .Build();
-
-        var serviceProvider = new ServiceCollection()
-            .AddLogging(options =>
-            {
-                options.ClearProviders();
-                options.AddConsole();
-            })
-            .AddSingleton<IConfiguration>(configuration)
-            .AddScoped<IBot, Bot>()
-            .BuildServiceProvider();
-
-        try
+        public static async Task LoadAsync()
         {
-            IBot bot = serviceProvider.GetRequiredService<IBot>();
+            var configuration = new ConfigurationBuilder()
+                .AddUserSecrets(Assembly.GetExecutingAssembly())
+                .Build();
 
-            await bot.StartAsync(serviceProvider);
+            var services = new ServiceCollection()
+                .AddLogging(options =>
+                {
+                    options.ClearProviders();
+                    options.AddConsole();
+                })
+                .AddSingleton<IConfiguration>(configuration)
 
-            Console.WriteLine(
-                "Conectado a Discord. Presione 'q' para salir...");
+                // 🔹 Estas son las líneas que te faltaban
+                .AddSingleton<SessionService>()
+                .AddSingleton<DiscordSocketClient>()
+                .AddSingleton<CommandService>()
 
-            do
+                .AddScoped<IBot, Bot>();
+
+            // Construimos el ServiceProvider
+            var serviceProvider = services.BuildServiceProvider();
+
+            try
             {
-                var keyInfo = Console.ReadKey();
+                IBot bot = serviceProvider.GetRequiredService<IBot>();
 
-                if (keyInfo.Key != ConsoleKey.Q) continue;
+                await bot.StartAsync(serviceProvider);
 
-                Console.WriteLine("\nFinalizado");
-                await bot.StopAsync();
+                Console.WriteLine("Conectado a Discord. Presione 'q' para salir...");
 
-                return;
-            } while (true);
-        }
-        catch (Exception exception)
-        {
-            Console.WriteLine(exception.Message);
-            Environment.Exit(-1);
+                do
+                {
+                    var keyInfo = Console.ReadKey();
+
+                    if (keyInfo.Key != ConsoleKey.Q) continue;
+
+                    Console.WriteLine("\nFinalizado");
+                    await bot.StopAsync();
+
+                    return;
+                } while (true);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+                Environment.Exit(-1);
+            }
         }
     }
 }
