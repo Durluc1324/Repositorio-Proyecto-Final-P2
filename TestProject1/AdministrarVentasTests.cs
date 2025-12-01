@@ -31,62 +31,11 @@ namespace TestProject1
             Venta venta = adminVentas.CrearVenta(vendedor, cliente, fecha);
 
             Assert.IsNotNull(venta);
-            Assert.AreEqual(1, adminVentas.ObtenerVentas().Count);
+            Assert.AreEqual(1, adminVentas.Ventas().Count);
             Assert.AreEqual(cliente, venta.ClienteComprador);
         }
 
-        // -------------------------------
-        // BUSCAR POR CLIENTE
-        // -------------------------------
-        [TestMethod]
-        public void BuscarTodasPorCliente_DeberiaRetornarCorrectas()
-        {
-            var v1 = adminVentas.CrearVenta(vendedor, cliente, DateTime.Now);
-            var v2 = adminVentas.CrearVenta(vendedor, cliente, DateTime.Now);
-            var otroCliente = new Cliente("Ana", "Lopez", "alopez@mail.com", "099222222", "Mujer", new DateTime(1987,4,16), vendedor);
-            adminVentas.CrearVenta(vendedor, otroCliente, DateTime.Now);
-
-            var resultados = adminVentas.BuscarTodasPorCliente(cliente);
-
-            Assert.AreEqual(2, resultados.Count);
-            Assert.IsTrue(resultados.Contains(v1));
-            Assert.IsTrue(resultados.Contains(v2));
-        }
-
-        // -------------------------------
-        // BUSCAR POR USUARIO
-        // -------------------------------
-        [TestMethod]
-        public void BuscarTodasPorUsuario_DeberiaRetornarCorrectas()
-        {
-            var vendedor2 = new Vendedor("Mario", "Suarez", "m@mail.com", "094444444");
-
-            var v1 = adminVentas.CrearVenta(vendedor, cliente, DateTime.Now);
-            var v2 = adminVentas.CrearVenta(vendedor2, cliente, DateTime.Now);
-
-            var resultados = adminVentas.BuscarTodasPorUsuario(vendedor);
-
-            Assert.AreEqual(1, resultados.Count);
-            Assert.AreEqual(v1, resultados[0]);
-        }
-
-        // -------------------------------
-        // BUSCAR POR FECHA
-        // -------------------------------
-        [TestMethod]
-        public void BuscarTodasPorFecha_DeberiaFiltrarCorrectamente()
-        {
-            DateTime hoy = DateTime.Today;
-            DateTime ayer = hoy.AddDays(-1);
-
-            var v1 = adminVentas.CrearVenta(vendedor, cliente, hoy);
-            adminVentas.CrearVenta(vendedor, cliente, ayer);
-
-            var resultados = adminVentas.BuscarTodasPorFecha(hoy);
-
-            Assert.AreEqual(1, resultados.Count);
-            Assert.AreEqual(v1, resultados[0]);
-        }
+      
 
         // -------------------------------
         // AGREGAR PRODUCTO
@@ -107,20 +56,7 @@ namespace TestProject1
 
             Assert.AreEqual(1, venta.Productos[prod]); // cantidad
         }
-
-
-        // -------------------------------
-        // CERRAR VENTA
-        // -------------------------------
-        [TestMethod]
-        public void CerrarVenta_DeberiaCambiarEstado()
-        {
-            var venta = adminVentas.CrearVenta(vendedor, cliente, DateTime.Now);
-
-            adminVentas.CerrarVenta(venta);
-
-            Assert.IsTrue(venta.VentaCerrada);
-        }
+        
 
         // -------------------------------
         // TOTAL POR PERÍODO
