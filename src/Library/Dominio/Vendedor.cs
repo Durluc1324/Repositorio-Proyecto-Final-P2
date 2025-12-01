@@ -12,15 +12,5 @@ public class Vendedor : Usuario
     {
         
     }
-
-    // Método específico de vendedor
-    public void CambiarVendedorAsignado(Cliente cliente, Vendedor vendedorNuevo)
-    {
-        // eliminar del vendedor actual
-        this.ClientesAsignados.Remove(cliente);
-        // agregar al nuevo vendedor
-        vendedorNuevo.ClientesAsignados.Add(cliente);
-        // actualizar referencia del cliente
-        cliente.UsuarioAsignado = vendedorNuevo;
-    }
+    
 }

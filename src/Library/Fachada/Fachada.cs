@@ -12,8 +12,7 @@ public class Fachada
     
 
     public Cliente DelegarCrearCliente(Usuario solicitante, string nombre, string apellido, string email,
-        string telefono,
-        string genero, DateTime fechaNacimiento)
+        string telefono, string genero, DateTime fechaNacimiento)
     {
         Cliente clienteNuevo = AdministrarClientes.Instancia.CrearCliente(solicitante, nombre, apellido, email,
             telefono, genero,
@@ -117,14 +116,14 @@ public class Fachada
         AdministrarInteracciones.Instancia.EliminarInteraccion(interaccion);
     }
 
-    public List<IRespondible> ObtenerInteraccionesNoRespondidas(Usuario usuario)
+    public List<IRespondible> DelegarObtenerInteraccionesNoRespondidas(Usuario usuario)
     {
         return AdministrarInteracciones.Instancia.ObtenerInteraccionesNoRespondidas(usuario);
     }
 
     //Llamada a métodos de AdministrarUsuarios
 
-    public Usuario CrearUsuario(Usuario solicitante, string nombre, string apellido, string email, string telefono, string contraseña, TipoRol rol)
+    public Usuario DelegarCrearUsuario(Usuario solicitante, string nombre, string apellido, string email, string telefono, string contraseña, TipoRol rol)
 
     {
         return AdministrarUsuarios.Instancia.CrearUsuario(solicitante, nombre, apellido, email, telefono, contraseña, rol);
