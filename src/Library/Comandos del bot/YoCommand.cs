@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using ClassLibrary;
 using Discord.Commands;
@@ -24,8 +28,7 @@ public class YoCommand : ModuleBase<SocketCommandContext>
             return;
         }
 
-        // 👉 Aquí va la parte que vos vas a implementar.
-        // Este string lo vas a construir como quieras.
+       
         string mensaje = ConstruirPanelUsuario(u);
 
         await ReplyAsync(mensaje);
@@ -34,27 +37,87 @@ public class YoCommand : ModuleBase<SocketCommandContext>
     // Dejé este método separado SOLO para que vos edites acá
     private string ConstruirPanelUsuario(Usuario u)
     {
-        // 🌟 ACA ADENTRO VOS ARMÁS EL TEXTO DEL PANEL 🌟
-        // Te dejo un esqueleto para que sea fácil:
+        var panel = new StringBuilder();
+        panel.AppendLine("--Información del Usuario--");
+        panel.AppendLine($"Nombre: {u.Nombre}");
+        panel.AppendLine($"Apellido: {u.Apellido}");
+        panel.AppendLine($"Teléfono: {u.Telefono}");
+        panel.AppendLine();
+        panel.AppendLine();
+        // ==============================
+        // CLIENTES
+        // ==============================
+        panel.AppendLine("--Clientes Totales--");
+        panel.AppendLine($"Cantidad: {u.ClientesAsignados.Count}");
 
-        string panel = $@"
-📌 **Información del Usuario**
-Nombre: {u.Nombre}
-Apellido: {u.Apellido}
-Teléfono: {u.Telefono}
+        foreach (var c in u.ClientesAsignados)
+        {
+            panel.AppendLine($"• {c.Nombre} {c.Apellido}");
+            panel.AppendLine($"   Tel: {c.Telefono}");
+            panel.AppendLine($"   Email: {c.Email}");
+        }
+        panel.AppendLine();
+        panel.AppendLine();
 
-📊 **Clientes Totales**
-Cantidad: {u.ClientesAsignados.Count}
-Clientes:" + $@" 
-{foreach (Cliente cliente in u.ClientesAsignados){}}
+        // ==============================
+        // INTERACCIONES RECIENTES
+        // ==============================
 
-📅 **Interacciones Recientes**
-(Aquí vos agregás lo que corresponda)
+        panel.AppendLine("--Interacciones Recientes--");
 
-📆 **Próximas Reuniones**
-(Aquí agregás lo que quieras mostrar)
-";
+        var ultimasInteracciones = u.ListaInteracciones
+            .OrderByDescending(i => i.Fecha)   // más recientes primero
+            .Take(5);                           // solamente 5
 
-        return panel;
+        foreach (var inter in ultimasInteracciones)
+        {
+            panel.AppendLine($"• {inter.Fecha:dd/MM/yyyy HH:mm} - {inter.Tema}");
+        }
+        panel.AppendLine();
+        panel.AppendLine();
+
+        // ==============================
+        // PRÓXIMAS REUNIONES
+        // ==============================
+
+        panel.AppendLine("--Próximas Reuniones--");
+
+        List<Reuniones> reuniones = new List<Reuniones>();
+        foreach (Interaccion interaccion in u.ListaInteracciones)
+        {
+            if (interaccion is Reuniones reunion)
+                reuniones.Add(reunion);
+        }
+        
+      
+        List<Reuniones> reunionesFuturas = new List<Reuniones>();
+
+        foreach (var reunion in reuniones)
+        {
+            if (reunion.Fecha > DateTime.Now)
+            {
+                reunionesFuturas.Add(reunion);
+            }
+        }
+        
+        reunionesFuturas.Sort((a, b) => a.Fecha.CompareTo(b.Fecha));
+
+
+        if (reunionesFuturas.Count == 0)
+        {
+            panel.AppendLine("No hay reuniones próximas.");
+        }
+        else
+        {
+            foreach (Reuniones reunionFutura in reunionesFuturas)
+            {
+                panel.AppendLine(
+                    $"Reunion con {reunionFutura.Receptor.Nombre} {reunionFutura.Receptor.Apellido} en {reunionFutura.Lugar} a las {reunionFutura.Fecha:dd/MM/yyyy HH:mm}");
+            }
+        }
+        
+        
+        
+        return panel.ToString();
     }
 }

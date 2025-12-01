@@ -26,56 +26,6 @@ namespace ClassLibrary
         _ventas.Add(nueva);
         return nueva;
     }
-
-    public List<Venta> ObtenerVentas()
-    {
-        return new List<Venta>(_ventas);
-    }
-    
-    public List<Venta> BuscarTodasPorCliente(Cliente cliente)
-    {
-        List<Venta> resultados = new List<Venta>();
-
-        foreach (Venta v in _ventas)
-        {
-            if (v.ClienteComprador == cliente)
-            {
-                resultados.Add(v);
-            }
-        }
-
-        return resultados;
-    }
-    
-    public List<Venta> BuscarTodasPorUsuario(Usuario vendedor)
-    {
-        List<Venta> resultados = new List<Venta>();
-
-        foreach (Venta v in _ventas)
-        {
-            if (v.UsuarioVendedor == vendedor)
-            {
-                resultados.Add(v);
-            }
-        }
-
-        return resultados;
-    }
-    
-    public List<Venta> BuscarTodasPorFecha(DateTime fecha)
-    {
-        List<Venta> resultados = new List<Venta>();
-
-        foreach (Venta v in _ventas)
-        {
-            if (v.Fecha.Date == fecha.Date)
-            {
-                resultados.Add(v);
-            }
-        }
-
-        return resultados;
-    }
     
     public List<Venta> BuscarTodasPorRango(Usuario usuario, DateTime inicio, DateTime fin)
     {
@@ -191,9 +141,7 @@ namespace ClassLibrary
     public void AgregarProducto(Venta venta, string nombre, double precio, int cantidad)
     {
             ArgumentNullException.ThrowIfNull(venta);
-
-            if (venta.VentaCerrada)
-                throw new VentaCerradaException();
+            
 
             if (string.IsNullOrWhiteSpace(nombre))
                 throw new ArgumentException("Nombre del producto inválido.");
@@ -204,18 +152,11 @@ namespace ClassLibrary
             if (cantidad <= 0)
                 throw new ArgumentException("La cantidad debe ser mayor que cero.");
 
-            if (venta.VentaCerrada)
-                throw new InvalidOperationException("No se pueden agregar productos a una venta cerrada.");
-
             Producto producto = new Producto(nombre, precio);
             venta.AgregarProducto(producto, cantidad);
     }
     
-    public void CerrarVenta(Venta venta)
-    {
-        ArgumentNullException.ThrowIfNull(venta);
-        venta.CerrarVenta();
-    }
+   
     
     public double ObtenerTotalVentasPeriodo(Usuario usuario, DateTime inicio, DateTime fin)
     {

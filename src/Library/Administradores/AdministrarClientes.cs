@@ -118,6 +118,48 @@ namespace ClassLibrary
         cliente.UsuarioAsignado = vendedorNuevo;
     }
 
+    public List<Cliente> BuscarClientesSinInteraccionDesde(Usuario usuario, DateTime fecha)
+    {
+        List<Cliente> clientesInactivos = new List<Cliente>();
+
+        foreach (Cliente cliente in usuario.ClientesAsignados)
+        {
+            // Caso 1: nunca tuvo interacciones
+            if (cliente.ListaInteracciones.Count == 0)
+            {
+                clientesInactivos.Add(cliente);
+                continue;
+            }
+
+            // Caso 2: obtener la última interacción con el usuario
+            DateTime ultimaFecha = DateTime.MinValue;
+
+            foreach (Interaccion interaccion in cliente.ListaInteracciones)
+            {
+                // Solo contar interacciones entre usuario <-> cliente
+                bool participa = (interaccion.Emisor == usuario || interaccion.Receptor == usuario);
+
+                if (participa && interaccion.Fecha > ultimaFecha)
+                {
+                    ultimaFecha = interaccion.Fecha;
+                }
+            }
+
+            // Si no hubo interacciones reales del usuario → se considera inactivo
+            if (ultimaFecha == DateTime.MinValue)
+            {
+                clientesInactivos.Add(cliente);
+            }
+            else if (ultimaFecha < fecha)
+            {
+                clientesInactivos.Add(cliente);
+            }
+        }
+
+        return clientesInactivos;
+    }
+
+
     public void LimpiarParaTest()
     {
         _clientes.Clear();

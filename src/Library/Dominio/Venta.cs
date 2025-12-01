@@ -11,7 +11,6 @@ public class Venta
     public Cliente ClienteComprador { get; private set; }
     public Usuario UsuarioVendedor { get; private set; }
     
-    public bool VentaCerrada { get; set; }
 
     public Venta(Cliente cliente, Usuario vendedor, DateTime fecha)
     {
@@ -22,7 +21,6 @@ public class Venta
 
         cliente.AgregarVenta(this);
         vendedor.AgregarVenta(this);
-        VentaCerrada = false;
     }
 
     public void AgregarProducto(Producto producto, int cantidad)
@@ -43,8 +41,5 @@ public class Venta
         return total;
     }
 
-    public void CerrarVenta()
-    {
-        VentaCerrada = true;
-    }
+   
 }

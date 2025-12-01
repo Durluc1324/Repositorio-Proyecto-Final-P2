@@ -79,6 +79,11 @@ public class Fachada
             fechaLimite);
     }
 
+    public List<Cliente> DelegarBuscarClientesSinInteraccionDesde(Usuario usuario, DateTime fecha)
+    {
+        return AdministrarClientes.Instancia.BuscarClientesSinInteraccionDesde(usuario, fecha);
+    }
+
     //Llamada a métodos de AdminisitrarInteracciones
 
     public Llamada DelegarCrearLlamada(Usuario emisor, Persona receptor, DateTime fecha, string tema)
@@ -162,26 +167,6 @@ public class Fachada
         return AdministrarVentas.Instancia.CrearVenta(usuario, cliente, fecha);
     }
 
-    public List<Venta> DelegarObtenerTodasLasVentas()
-    {
-        return AdministrarVentas.Instancia.ObtenerVentas();
-    }
-
-    public List<Venta> DelegarBuscarTodasPorCliente(Cliente cliente)
-    {
-        return AdministrarVentas.Instancia.BuscarTodasPorCliente(cliente);
-    }
-
-    public List<Venta> DelegarBuscarTodasPorUsuario(Usuario vendedor)
-    {
-        return AdministrarVentas.Instancia.BuscarTodasPorUsuario(vendedor);
-    }
-
-    public List<Venta> DelegarBuscarTodasPorFecha(DateTime fecha)
-    {
-        return AdministrarVentas.Instancia.BuscarTodasPorFecha(fecha);
-    }
-
     public List<Venta> DelegarBuscarTodasPorRango(Usuario usuario, DateTime inicio, DateTime fin)
     {
         return AdministrarVentas.Instancia.BuscarTodasPorRango(usuario, inicio, fin);
@@ -201,11 +186,7 @@ public class Fachada
     {
         AdministrarVentas.Instancia.AgregarProducto(venta, nombre, precio, cantidad);
     }
-
-    public void DelegarCerrarVenta(Venta venta)
-    {
-        AdministrarVentas.Instancia.CerrarVenta(venta);
-    }
+    
 
     public double DelegarObtenerTotalVentasPeriodo(Usuario usuario, DateTime inicio, DateTime fin)
     {
