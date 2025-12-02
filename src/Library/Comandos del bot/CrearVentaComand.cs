@@ -41,7 +41,7 @@ public async Task CrearVentaAsync(string correoCliente, [Remainder]string mensaj
             return;
         }
 
-        List<Cliente> clienteEncontrado = Fachada.FachadaSistema.DelegarBuscarClientes(vendedor, partes[0]);
+        List<Cliente> clienteEncontrado = Fachada.FachadaSistema.DelegarBuscarClientes(vendedor, correoCliente);
 
         Cliente cliente = clienteEncontrado[0];
         
