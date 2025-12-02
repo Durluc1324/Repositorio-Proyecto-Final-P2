@@ -158,24 +158,24 @@ namespace ClassLibrary
     
    
     
-    public double ObtenerTotalVentasPeriodo(Usuario usuario, DateTime inicio, DateTime fin)
+    public List<Venta> ObtenerVentasPeriodo(Usuario usuario, DateTime inicio, DateTime fin)
     {
         if (usuario == null)
             throw new UsuarioNuloException();
-        
 
-        double total = 0;
+        List<Venta> ventasEnPeriodo = new List<Venta>();
 
         foreach (var venta in usuario.ListaVentas)
         {
             if (venta.Fecha >= inicio && venta.Fecha <= fin)
             {
-                total += venta.Total;
+                ventasEnPeriodo.Add(venta);
             }
         }
 
-        return total;
+        return ventasEnPeriodo;
     }
+
 
     
     public void LimpiarParaTest()

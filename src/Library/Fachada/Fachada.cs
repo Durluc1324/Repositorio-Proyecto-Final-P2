@@ -55,29 +55,12 @@ public class Fachada
 
     //Llamada a métodos de AdministrarCotizaciones
 
-    public void DelegarCrearCotizacion(Usuario creador, Cliente cliente,
+    public Cotizacion DelegarCrearCotizacion(Usuario creador, Cliente cliente,
         DateTime fecha, DateTime fechaLimite, string descripcion)
     {
-        AdministrarCotizaciones.Instancia.CrearCotizacion(creador, cliente, fecha, fechaLimite, descripcion);
+        return AdministrarCotizaciones.Instancia.CrearCotizacion(creador, cliente, fecha, fechaLimite, descripcion);
     }
-
-    public List<Cotizacion> DelegarObtenerCotizaciones()
-    {
-        return AdministrarCotizaciones.Instancia.ObtenerCotizaciones();
-    }
-
-    public List<Cotizacion> DelegarBuscarCotizacionesComoAdmin(string criterio, DateTime? fecha,
-        DateTime? fechaLimite)
-    {
-        return AdministrarCotizaciones.Instancia.BuscarCotizacionesComoAdmin(criterio, fecha, fechaLimite);
-    }
-
-    public List<Cotizacion> DelegarBuscarCotizacionesComoUsuario(
-        Usuario usuario, string criterio, DateTime? fecha, DateTime? fechaLimite)
-    {
-        return AdministrarCotizaciones.Instancia.BuscarCotizacionesComoUsuario(usuario, criterio, fecha,
-            fechaLimite);
-    }
+    
 
     public List<Cliente> DelegarBuscarClientesSinInteraccionDesde(Usuario usuario, DateTime fecha)
     {
@@ -215,9 +198,9 @@ public class Fachada
     }
     
 
-    public double DelegarObtenerTotalVentasPeriodo(Usuario usuario, DateTime inicio, DateTime fin)
+    public List<Venta> DelegarObtenerVentasPeriodo(Usuario usuario, DateTime inicio, DateTime fin)
     {
-        return AdministrarVentas.Instancia.ObtenerTotalVentasPeriodo(usuario, inicio, fin);
+        return AdministrarVentas.Instancia.ObtenerVentasPeriodo(usuario, inicio, fin);
     }
 
 

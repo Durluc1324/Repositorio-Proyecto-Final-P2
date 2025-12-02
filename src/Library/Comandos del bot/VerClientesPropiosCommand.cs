@@ -26,7 +26,7 @@ public class VerClientesPropiosCommand: ModuleBase<SocketCommandContext>
             return;
         }
 
-        List<Cliente> clientesDeUsuario = vendedor.ClientesAsignados;
+        List<Cliente> clientesDeUsuario = Fachada.FachadaSistema.DelegarVerClientesPropios(vendedor);
         string listaClientesPropios = ClientesPropios(clientesDeUsuario) ;
         await ReplyAsync(listaClientesPropios);
     }

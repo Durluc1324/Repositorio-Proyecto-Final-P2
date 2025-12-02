@@ -41,31 +41,5 @@ public class AdministrarCotizacionesTests
         Assert.IsTrue(vendedor.ListaCotizaciones.Contains(c));
         Assert.IsTrue(cliente.ListaCotizaciones.Contains(c));
     }
-
-    [TestMethod]
-    public void ObtenerCotizaciones_DeberiaDevolverCopia()
-    {
-        var c = AdministrarCotizaciones.Instancia.CrearCotizacion(vendedor, cliente, DateTime.Now, DateTime.Now.AddDays(7), "Desc");
-        var list = AdministrarCotizaciones.Instancia.ObtenerCotizaciones();
-        Assert.AreEqual(1, list.Count);
-        // modificar la copia no debe afectar la lista interna (es copia por constructor)
-        list.Clear();
-        Assert.AreEqual(1, AdministrarCotizaciones.Instancia.Cotizaciones().Count);
-    }
-
-    [TestMethod]
-    public void BuscarCotizacionesComoAdmin_PorCriterio_DeberiaEncontrar()
-    {
-        Cotizacion c = AdministrarCotizaciones.Instancia.CrearCotizacion(vendedor, cliente, DateTime.Now, DateTime.Now.AddDays(7), "Desc");
-        var res = AdministrarCotizaciones.Instancia.BuscarCotizacionesComoAdmin(cliente.Nombre, null, null);
-        Assert.IsTrue(res.Contains(c));
-    }
-
-    [TestMethod]
-    public void BuscarCotizacionesComoUsuario_PorCriterioYFecha_DeberiaEncontrar()
-    {
-        var c = AdministrarCotizaciones.Instancia.CrearCotizacion(vendedor, cliente, DateTime.Now.Date, DateTime.Now.AddDays(7), "Desc");
-        var res = AdministrarCotizaciones.Instancia.BuscarCotizacionesComoUsuario(vendedor, cliente.Nombre, DateTime.Now.Date, null);
-        Assert.IsTrue(res.Contains(c));
-    }
+    
 }

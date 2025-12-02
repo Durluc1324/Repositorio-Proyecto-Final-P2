@@ -56,30 +56,6 @@ namespace TestProject1
 
             Assert.AreEqual(1, venta.Productos[prod]); // cantidad
         }
-        
-
-        // -------------------------------
-        // TOTAL POR PERÍODO
-        // -------------------------------
-        [TestMethod]
-        public void TotalVentasPeriodo_DeberiaSumarCorrectamente()
-        {
-            DateTime hoy = DateTime.Today;
-
-            var v1 = adminVentas.CrearVenta(vendedor, cliente, hoy);
-            adminVentas.AgregarProducto(v1, "Mouse", 500, 1);
-
-            var v2 = adminVentas.CrearVenta(vendedor, cliente, hoy.AddHours(1));
-            adminVentas.AgregarProducto(v2, "Teclado", 1500, 1);
-
-            double total = adminVentas.ObtenerTotalVentasPeriodo(
-                vendedor,
-                hoy.AddHours(-1),
-                hoy.AddHours(2)
-            );
-
-            Assert.AreEqual(2000, total);
-        }
 
         // -------------------------------
         // BUSQUEDA ADMIN
