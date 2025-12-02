@@ -15,7 +15,7 @@ public class CrearClienteCommand : ModuleBase<SocketCommandContext>
     }
 
     [Command("crearcliente")]
-    public async Task CrearClienteAsync(string mensaje)
+    public async Task CrearClienteAsync(string nombre, string apellido, string email, string telefono, string genero, string fechaNacimiento)
     {
         Usuario vendedor = sessions.GetUsuario(Context.User.Id);
 
@@ -25,15 +25,14 @@ public class CrearClienteCommand : ModuleBase<SocketCommandContext>
             return;
         }
         //Debería de recibir algo como "Tom Riddle tomriddle@gmail.com 1234 hombre 02:04:1992
-        string[] datos = mensaje.Split(" ");
-        
-        if (datos.Length < 6)
+        if (string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(apellido) || string.IsNullOrEmpty(email) ||
+            string.IsNullOrEmpty(telefono)||string.IsNullOrEmpty(genero) || string.IsNullOrEmpty(fechaNacimiento))
         {
-            await ReplyAsync("Formato incorrecto: usa `!crearcliente nombre apellido email telefono genero dd:mm:yyyy`");
+            await ReplyAsync("Formato incorrecto. Use '!crearcliente nombre apellido telefono genero dd:mm:yyyy'");
             return;
         }
         
-        string[] fechaNacimiendo = datos[5].Split(":");
+        string[] fechaNacimiendo = fechaNacimiento.Split(":");
         
         if (fechaNacimiendo.Length != 3 ||
             !int.TryParse(fechaNacimiendo[0], out int dia) ||
@@ -57,8 +56,8 @@ public class CrearClienteCommand : ModuleBase<SocketCommandContext>
         }
 
 
-        Cliente cliente = Fachada.FachadaSistema.DelegarCrearCliente(vendedor, datos[0], datos[1], datos[2], datos[3],
-            datos[4], new DateTime(año, mes, dia));
+        Cliente cliente = Fachada.FachadaSistema.DelegarCrearCliente(vendedor, nombre, apellido, email, telefono,
+            genero, fecha);
         
         await ReplyAsync($"El cliente {cliente.Nombre} {cliente.Apellido} ha sido creado correctamente");
     }

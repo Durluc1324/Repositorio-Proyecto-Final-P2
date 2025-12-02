@@ -82,20 +82,5 @@ public class AdministrarUsuariosTests
         var otroAdmin = AdministrarUsuarios.Instancia.Usuarios()[0];
         AdministrarUsuarios.Instancia.SuspenderUsuario(admin, otroAdmin); // debe lanzar
     }
-
-    [TestMethod]
-    [ExpectedException(typeof(UnauthorizedAccessException))]
-    public void VerTodos_NoAdmin_DeberiaLanzar()
-    {
-        AdministrarUsuarios.Instancia.VerTodos(vendedor);
-    }
-
-    [TestMethod]
-    public void VerTodos_Admin_DeberiaRetornarLista()
-    {
-        AdministrarUsuarios.Instancia.CrearUsuario(admin, "U1", "U1", "u1@test.com", "01", "3563","vendedor");
-        var list = AdministrarUsuarios.Instancia.VerTodos(admin);
-        Assert.IsNotNull(list);
-        Assert.AreEqual(1, list.Count);
-    }
+    
 }

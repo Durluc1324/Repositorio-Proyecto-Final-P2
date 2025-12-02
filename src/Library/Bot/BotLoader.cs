@@ -14,8 +14,9 @@ namespace ClassLibrary
         public static async Task LoadAsync()
         {
             var configuration = new ConfigurationBuilder()
-                .AddUserSecrets(Assembly.GetExecutingAssembly())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
+
 
             var services = new ServiceCollection()
                 .AddLogging(options =>

@@ -82,38 +82,6 @@ public class AdministrarInteraccionesTests
         Assert.AreEqual("nota de prueba", m.Nota);
     }
 
-    [TestMethod]
-    public void EliminarInteraccion_DeberiaQuitarDeTodosLosListados()
-    {
-        var m = AdministrarInteracciones.Instancia.CrearMensaje(vendedor, cliente, DateTime.Now, "X");
-        Assert.AreEqual(1, AdministrarInteracciones.Instancia.Interacciones().Count);
-
-        AdministrarInteracciones.Instancia.EliminarInteraccion(m);
-
-        Assert.AreEqual(0, AdministrarInteracciones.Instancia.Interacciones().Count);
-        Assert.IsFalse(vendedor.ListaInteracciones.Contains(m));
-        Assert.IsFalse(cliente.ListaInteracciones.Contains(m));
-    }
-
-    [TestMethod]
-    public void ObtenerInteraccionesNoRespondidas_DeberiaDetectarMensajesNoRespondidos()
-    {
-        // Preparar: mensaje inicial (usuario A -> B), luego respuesta (B -> A con fecha mayor)
-        Usuario A = new Vendedor("A", "Uno", "a@test.com", "090111111");
-        Usuario B = new Vendedor("B", "Dos", "b@test.com", "090222222");
-
-        // mensaje no respondido inicialmente
-        var m1 = AdministrarInteracciones.Instancia.CrearMensaje(A, B, DateTime.Now.AddMinutes(-10), "hola");
-        // respuesta de B a A (fecha mayor)
-        var m2 = AdministrarInteracciones.Instancia.CrearMensaje(B, A, DateTime.Now, "hola respuesta");
-
-        // Al pedir las no respondidas de A, la lógica debe marcar m1 como respondido (porque existe m2)
-        var pendientesA = AdministrarInteracciones.Instancia.ObtenerInteraccionesNoRespondidas(A);
-        // m1 fue respondido -> no debe aparecer en pendientes de A
-        Assert.IsFalse(pendientesA.Contains(m1));
-
-        // Para B, m2 fue creado respondiendo a m1, pero B puede tener otras no respondidas (ninguna en este caso)
-        var pendientesB = AdministrarInteracciones.Instancia.ObtenerInteraccionesNoRespondidas(B);
-        Assert.IsTrue(pendientesB.Count == 0 || !pendientesB.Contains(m1));
-    }
+    
+    
 }

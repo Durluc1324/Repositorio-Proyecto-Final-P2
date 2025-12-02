@@ -95,13 +95,7 @@ namespace ClassLibrary
     {
         interaccion.AddNota(nota);
     }
-
-    public void EliminarInteraccion(Interaccion interaccion)
-    {
-        interaccion.Emisor.EliminarInteraccion(interaccion);
-        interaccion.Receptor.EliminarInteraccion(interaccion);
-        _interacciones.Remove(interaccion);
-    }
+    
 
     // ---------- MÉTODOS AUXILIARES ----------
 
@@ -142,23 +136,6 @@ namespace ClassLibrary
         }
     }
     
-    public List<IRespondible> ObtenerInteraccionesNoRespondidas(Usuario usuario)
-    {
-        // Primero actualizar
-        ActualizarInteraccionesNoRespondidas(usuario);
-
-        List<IRespondible> pendientes = new List<IRespondible>();
-
-        foreach (var interaccion in usuario.ListaInteracciones)
-        {
-            if (interaccion is IRespondible r && !r.Respondido)
-            {
-                pendientes.Add(r);
-            }
-        }
-
-        return pendientes;
-    }
     
     public void LimpiarParaTest()
     {
