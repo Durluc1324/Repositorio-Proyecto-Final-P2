@@ -17,7 +17,7 @@ public class CrearLlamadaCommand: ModuleBase<SocketCommandContext>
     }
 
     [Command("crearllamada")]
-    public async Task CrearLlamadaCommandAsync(string mensaje)
+    public async Task CrearLlamadaCommandAsync([Remainder]string mensaje)
     {
         if (string.IsNullOrEmpty(mensaje))
         {

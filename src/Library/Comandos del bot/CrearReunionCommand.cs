@@ -18,7 +18,7 @@ public class CrearReunionCommand: ModuleBase<SocketCommandContext>
     }
 
     [Command("crearreunion")]
-    public async Task CrearReunionCommandAsync(string mensaje)
+    public async Task CrearReunionCommandAsync([Remainder]string mensaje)
     {
         if (string.IsNullOrEmpty(mensaje))
         {
