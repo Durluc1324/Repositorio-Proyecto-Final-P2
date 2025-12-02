@@ -37,13 +37,11 @@ public class HelpCommand: ModuleBase<SocketCommandContext>
         panelDeAyuda.AppendLine("!buscarclientesininteracciondesde dd:mm:yyyy");
         panelDeAyuda.AppendLine("!buscarventaporrangofecha dd:mm:yyyy dd:mm:yyyy");
         panelDeAyuda.AppendLine("!crearcliente nombre apellido telefono genero dd:mm:yyyy");
-        panelDeAyuda.AppendLine("!crearcliente nombre apellido telefono genero dd:mm:yyyy");
+        panelDeAyuda.AppendLine("!crearcliente nombre apellido email telefono genero dd:mm:yyyy");
         panelDeAyuda.AppendLine("!crearcotizacion EmailOTelefonoCliente  dd:mm:yyyy descrición");
         panelDeAyuda.AppendLine("!crearcotizacion EmailOTelefonoCliente  dd:mm:yyyy descrición");
         panelDeAyuda.AppendLine("!crearemail CorreoEmisor CorreoReceptor dd:mm:yyyy Tema | contenido");
-        panelDeAyuda.AppendLine("!crearemail CorreoEmisor CorreoReceptor dd:mm:yyyy tema | contenido (la barra sí o sí es necesaria)");
         panelDeAyuda.AppendLine("!crearllamada NumeroDelCliente dd:mm:yyyy Tema");
-        panelDeAyuda.AppendLine("!crearmensaje NumeroEmisor NumeroReceptor dd:mm:yyyy Contenido");
         panelDeAyuda.AppendLine("!crearmensaje NumeroEmisor NumeroReceptor dd:mm:yyyy Contenido");
         panelDeAyuda.AppendLine("!crearreunion CorreoReceptor dd:mm:yyyy Tema | Lugar");
         panelDeAyuda.AppendLine("!crearusuario Nombre Apellido Email Telefono Contraseña Rol");
