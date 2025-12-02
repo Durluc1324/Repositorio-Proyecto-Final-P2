@@ -18,9 +18,9 @@ public class CrearReunionCommand: ModuleBase<SocketCommandContext>
     }
 
     [Command("crearreunion")]
-    public async Task CrearReunionCommandAsync([Remainder]string mensaje)
+    public async Task CrearReunionCommandAsync(string correoReceptor, string fecha, [Remainder]string temaYLugar)
     {
-        if (string.IsNullOrEmpty(mensaje))
+        if (string.IsNullOrEmpty(correoReceptor) || string.IsNullOrEmpty(fecha) || string.IsNullOrEmpty(temaYLugar))
         {
             await ReplyAsync(
                 "Formato incorrecto. Uso: `!crearreunion correoreceptor dd:mm:yyyy tema | lugar`");
@@ -33,33 +33,26 @@ public class CrearReunionCommand: ModuleBase<SocketCommandContext>
             await ReplyAsync("Debes iniciar sesión primero con `!login`.");
             return;
         }
-        var partes = mensaje.Split("|");
-        if (partes.Length != 2)
+        var tema_Lugar = temaYLugar.Split("|");
+        if (tema_Lugar.Length != 2)
         {
-            await ReplyAsync("Debes separar el tema del contenido con `|`.");
+            await ReplyAsync("No se ha añadido el tema o el lugar de la reunion. Recuerde añadir |");
             return;
         }
 
-        string datosPrincipales = partes[0].Trim();
-        string lugar = partes[1].Trim();
+        string tema = tema_Lugar[0].Trim();
+        string lugar = tema_Lugar[1].Trim();
+        
 
-        string[] datos = datosPrincipales.Split(" ");
-
-        if (datos.Length < 4)
-        {
-            await ReplyAsync("Faltan datos. Uso: `!crearreunion correoreceptor dd:mm:yyyy tema | contenido`");
-            return;
-        }
-
-        Persona receptor = Fachada.FachadaSistema.BuscarPersona(datos[0]);
+        Persona receptor = Fachada.FachadaSistema.BuscarPersona(correoReceptor);
         
         if (receptor == null)
         {
-            await ReplyAsync($"No se encontró al receptor con el correo {datos[0]}");
+            await ReplyAsync($"No se encontró al receptor con el correo {correoReceptor}");
             return;
         }
         
-        string[] partesFecha = datos[2].Split(":");
+        string[] partesFecha = fecha.Split(":");
         if (partesFecha.Length != 3 ||
             !int.TryParse(partesFecha[0], out int dia) ||
             !int.TryParse(partesFecha[1], out int mes) ||
@@ -79,8 +72,6 @@ public class CrearReunionCommand: ModuleBase<SocketCommandContext>
             await ReplyAsync("La fecha ingresada no es válida.");
             return;
         }
-
-        string tema = string.Join(" ", datos.Skip(3));
 
         Reuniones reunion = Fachada.FachadaSistema.DelegarCrearReunion(vendedor, receptor, fechaReunion, tema, lugar);
 

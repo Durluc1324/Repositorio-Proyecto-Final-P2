@@ -18,9 +18,9 @@ public class CrearMensajeCommand:ModuleBase<SocketCommandContext>
     }
 
     [Command("crearmensaje")]
-    public async Task CrearMensajeCommandAsync([Remainder]string mensaje)
+    public async Task CrearMensajeCommandAsync(string numeroEmisor, string numeroReceptor, string fechaCreacion, [Remainder]string contenido)
     {
-        if (string.IsNullOrEmpty(mensaje))
+        if (string.IsNullOrEmpty(numeroEmisor) || string.IsNullOrEmpty(numeroReceptor) || string.IsNullOrEmpty(fechaCreacion) || string.IsNullOrEmpty(contenido))
         {
             await ReplyAsync("No se han introducido datos suficientes. Use '!crearmensaje numeroemisor numeroreceptor dd:mm:yyyy contenido");
             return;
@@ -34,38 +34,34 @@ public class CrearMensajeCommand:ModuleBase<SocketCommandContext>
             return;
         }
         
-        string[] datos = mensaje.Split(" ");
         Persona emisor = null;
         Persona receptor = null;
 
-        if (vendedor.Telefono.Equals(datos[0]))
+        if (vendedor.Telefono.Equals(numeroEmisor))
         {
             emisor = vendedor;
-            receptor = Fachada.FachadaSistema.BuscarPersona(datos[1]);
+            receptor = Fachada.FachadaSistema.BuscarPersona(numeroReceptor);
         }
-        else if (vendedor.Telefono.Equals(datos[1]))
+        else if (vendedor.Telefono.Equals(numeroReceptor))
 
         {
-            emisor = Fachada.FachadaSistema.BuscarPersona(datos[0]);
+            emisor = Fachada.FachadaSistema.BuscarPersona(numeroEmisor);
             receptor = vendedor;
         }
         
         if (emisor == null)
         {
-            await ReplyAsync($"No se encontró al emisor con teléfono {datos[0]}");
+            await ReplyAsync($"No se encontró al emisor con teléfono {numeroEmisor}");
             return;
         }
 
         if (receptor == null)
         {
-            await ReplyAsync($"No se encontró al receptor con teléfono {datos[1]}");
+            await ReplyAsync($"No se encontró al receptor con teléfono {numeroReceptor}");
             return;
         }
 
-
-        string tema = string.Join(" ", datos.Skip(3));
-
-        string fecha = datos[2];
+        string fecha = fechaCreacion;
         string[] partesFecha = fecha.Split(":");
         
         if (partesFecha.Length != 3 ||
@@ -88,7 +84,7 @@ public class CrearMensajeCommand:ModuleBase<SocketCommandContext>
             return;
         }
 
-        Mensaje mensajeCreado = Fachada.FachadaSistema.DelegarCrearMensaje(emisor, receptor, fechadeMensaje, tema);
+        Mensaje mensajeCreado = Fachada.FachadaSistema.DelegarCrearMensaje(emisor, receptor, fechadeMensaje, contenido);
 
         await ReplyAsync($"El mensaje de {emisor.Nombre} {emisor.Apellido} a {receptor.Nombre} {receptor.Apellido} ha sido creado con exito");
     }

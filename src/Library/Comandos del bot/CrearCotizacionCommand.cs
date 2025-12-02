@@ -34,7 +34,7 @@ public async Task CrearCotizacionCommandAsync(string emailOTelefonoCliente, stri
         return;
     }
 
-    List<Cliente> clientes = Fachada.FachadaSistema.DelegarBuscarClientes(emailOTelefonoCliente);
+    List<Cliente> clientes = Fachada.FachadaSistema.DelegarBuscarClientes(vendedor, emailOTelefonoCliente);
 
     if (clientes.Count == 0)
     {

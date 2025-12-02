@@ -106,11 +106,11 @@ public class AdministrarClientesTests
         var c1 = AdministrarClientes.Instancia.CrearCliente(admin, "Carlos", "Perez", "carlos@a.com", "100", "M", DateTime.Now);
         var c2 = AdministrarClientes.Instancia.CrearCliente(admin, "Ana", "Lopez", "ana@b.com", "200", "F", DateTime.Now);
 
-        var res1 = AdministrarClientes.Instancia.BuscarClientes("Carlos");
+        var res1 = AdministrarClientes.Instancia.BuscarClientes(admin,"Carlos");
         Assert.IsTrue(res1.Contains(c1));
         Assert.IsFalse(res1.Contains(c2));
 
-        var res2 = AdministrarClientes.Instancia.BuscarClientes("ana@b.com");
+        var res2 = AdministrarClientes.Instancia.BuscarClientes(admin,"ana@b.com");
         Assert.IsTrue(res2.Contains(c2));
     }
 
@@ -120,7 +120,7 @@ public class AdministrarClientesTests
         var c = AdministrarClientes.Instancia.CrearCliente(admin, "P", "Q", "p@q.com", "300", "X", DateTime.Now);
         AdministrarClientes.Instancia.AgregarEtiquetaCliente(admin, c, "VIP");
 
-        List<Cliente> res = AdministrarClientes.Instancia.BuscarClientes("VIP");
+        List<Cliente> res = AdministrarClientes.Instancia.BuscarClientes(admin,"VIP");
         Assert.IsTrue(res.Contains(c));
     }
 

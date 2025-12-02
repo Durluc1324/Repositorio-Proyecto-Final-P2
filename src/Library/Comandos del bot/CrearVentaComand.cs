@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ClassLibrary;
@@ -15,19 +16,19 @@ public class CrearVentaComand: ModuleBase<SocketCommandContext>
     }
     
    [Command("crearventa")]
-public async Task CrearVentaAsync([Remainder]string mensaje)
+public async Task CrearVentaAsync(string correoCliente, [Remainder]string mensaje)
 {
     try
     {
         string[] partes = mensaje.Split(" ");
 
-        if (partes.Length < 4)
+        if (string.IsNullOrEmpty(correoCliente) || string.IsNullOrEmpty(mensaje))
         {
             await ReplyAsync("Formato incorrecto. Usa: '!crearventa correo producto precio cantidad ...'");
             return;
         }
 
-        if ((partes.Length - 1) % 3 != 0)
+        if (partes.Length  % 3 != 0)
         {
             await ReplyAsync("Formato incorrecto. Después del correo, cada producto debe tener: nombre precio cantidad.");
             return;
@@ -40,8 +41,16 @@ public async Task CrearVentaAsync([Remainder]string mensaje)
             return;
         }
 
-        Cliente cliente = vendedor.ClientesAsignados
-            .FirstOrDefault(c => c.Email == partes[0]);
+        List<Cliente> clienteEncontrado = Fachada.FachadaSistema.DelegarBuscarClientes(vendedor, partes[0]);
+
+        Cliente cliente = clienteEncontrado[0];
+        
+        if (clienteEncontrado.Count > 1)
+        {
+            await ReplyAsync(
+                "Multiples clientes encontrados. Revise que su cliente no tenga un correo electrónico repetido");
+            return;
+        }
 
         if (cliente == null)
         {
@@ -52,7 +61,7 @@ public async Task CrearVentaAsync([Remainder]string mensaje)
         // 3. Crear la venta
         Venta venta = Fachada.FachadaSistema.DelegarCrearVenta(vendedor, cliente, DateTime.Now);
 
-        for (int i = 1; i < partes.Length; i += 3)
+        for (int i = 0; i < partes.Length; i += 3)
         {
             string nombre = partes[i];
 

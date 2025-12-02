@@ -33,7 +33,7 @@ public class BuscarClientesCommand: ModuleBase<SocketCommandContext>
             return;
         }
 
-        List<Cliente> clientes = Fachada.FachadaSistema.DelegarBuscarClientes(mensaje);
+        List<Cliente> clientes = Fachada.FachadaSistema.DelegarBuscarClientes(vendedor, mensaje);
 
         string clientesEncontrados = PanelClientesEncontrados(clientes);
         await ReplyAsync(clientesEncontrados);

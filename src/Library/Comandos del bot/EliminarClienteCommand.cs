@@ -35,7 +35,7 @@ public class EliminarClienteCommand: ModuleBase<SocketCommandContext>
         }
 
         string emailOTelefono = partes[0];
-        List<Cliente> cliente = Fachada.FachadaSistema.DelegarBuscarClientes(emailOTelefono);
+        List<Cliente> cliente = Fachada.FachadaSistema.DelegarBuscarClientes(vendedor, emailOTelefono);
 
         if (cliente.Count == 0)
         {
