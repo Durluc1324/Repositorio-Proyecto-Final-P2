@@ -15,7 +15,7 @@ public class CrearVentaComand: ModuleBase<SocketCommandContext>
     }
     
    [Command("crearventa")]
-public async Task CrearVentaAsync(string mensaje)
+public async Task CrearVentaAsync([Remainder]string mensaje)
 {
     try
     {

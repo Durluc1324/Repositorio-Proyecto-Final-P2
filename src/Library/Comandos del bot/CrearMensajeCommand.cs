@@ -18,7 +18,7 @@ public class CrearMensajeCommand:ModuleBase<SocketCommandContext>
     }
 
     [Command("crearmensaje")]
-    public async Task CrearMensajeCommandAsync(string mensaje)
+    public async Task CrearMensajeCommandAsync([Remainder]string mensaje)
     {
         if (string.IsNullOrEmpty(mensaje))
         {

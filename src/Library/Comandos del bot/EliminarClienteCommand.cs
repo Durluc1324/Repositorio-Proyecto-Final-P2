@@ -16,7 +16,7 @@ public class EliminarClienteCommand: ModuleBase<SocketCommandContext>
     }
 
     [Command("eliminarcliente")]
-    public async Task EliminarClienteAsync(string mensaje)
+    public async Task EliminarClienteAsync([Remainder]string mensaje)
     {
         // lo que debe de recibir es: !eliminarcliente tomriddle@gmail.com || 092123
         string[] partes = mensaje.Split(" ");

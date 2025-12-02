@@ -17,7 +17,7 @@ public class BuscarClientesCommand: ModuleBase<SocketCommandContext>
     }
 
     [Command("buscarcliente")]
-    public async Task BuscarClientesCommandAsync(string mensaje)
+    public async Task BuscarClientesCommandAsync([Remainder]string mensaje)
     {
         if (string.IsNullOrEmpty(mensaje))
         {

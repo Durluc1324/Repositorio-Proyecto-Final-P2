@@ -14,7 +14,7 @@ public class ModificarClienteCommand: ModuleBase<SocketCommandContext>
     }
 
     [Command("modificarcliente")]
-    public async Task ModificarClienteAsync(string mensaje)
+    public async Task ModificarClienteAsync([Remainder]string mensaje)
     {
         //divide el mensaje en una array de strings para poder organizar los datos
         string[] partes = mensaje.Split(" ");
