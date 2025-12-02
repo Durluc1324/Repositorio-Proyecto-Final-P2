@@ -73,14 +73,6 @@ namespace ClassLibrary
         usuario.Suspendido = false;
     }
 
-    public List<Usuario> VerTodos(Usuario solicitante)
-    {
-        if (solicitante.Rol != TipoRol.ADMINISTRADOR)
-            throw new UnauthorizedAccessException("Solo administradores pueden ver todos los usuarios.");
-
-        return _usuarios;
-    }
-
     public Usuario Login(string emailOTelefono, string contraseña)
     {
         if (string.IsNullOrWhiteSpace(emailOTelefono))

@@ -104,16 +104,7 @@ public class Fachada
     {
         AdministrarInteracciones.Instancia.AgregarNota(interaccion, nota);
     }
-
-    public void DelegarEliminarInteraccion(Interaccion interaccion)
-    {
-        AdministrarInteracciones.Instancia.EliminarInteraccion(interaccion);
-    }
-
-    public List<IRespondible> DelegarObtenerInteraccionesNoRespondidas(Usuario usuario)
-    {
-        return AdministrarInteracciones.Instancia.ObtenerInteraccionesNoRespondidas(usuario);
-    }
+    
 
     //Llamada a métodos de AdministrarUsuarios
 
@@ -137,11 +128,7 @@ public class Fachada
     {
         AdministrarUsuarios.Instancia.RehabilitarUsuario(solicitante, usuario);
     }
-
-    public List<Usuario> DelegarVerTodos(Usuario solicitante)
-    {
-        return AdministrarUsuarios.Instancia.VerTodos(solicitante);
-    }
+    
 
     public Usuario DelegarLogin(string emailOTelefono, string contraseña)
     {
