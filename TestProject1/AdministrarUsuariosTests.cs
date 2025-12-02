@@ -24,11 +24,11 @@ public class AdministrarUsuariosTests
     [TestMethod]
     public void CrearUsuario_Admin_DeberiaCrearVendedorYAdmin()
     {
-        AdministrarUsuarios.Instancia.CrearUsuario(admin, "Nombre", "Apellido", "nuevo@test.com", "091234","5678" ,TipoRol.VENDEDOR);
+        AdministrarUsuarios.Instancia.CrearUsuario(admin, "Nombre", "Apellido", "nuevo@test.com", "091234","5678" ,"vendedor");
         Assert.AreEqual(1, AdministrarUsuarios.Instancia.Usuarios().Count);
         Assert.IsInstanceOfType(AdministrarUsuarios.Instancia.Usuarios()[0], typeof(Vendedor));
 
-        AdministrarUsuarios.Instancia.CrearUsuario(admin, "A2", "B2", "a2@test.com", "099999", "2345",TipoRol.ADMINISTRADOR);
+        AdministrarUsuarios.Instancia.CrearUsuario(admin, "A2", "B2", "a2@test.com", "099999", "2345","administrador");
         Assert.AreEqual(2, AdministrarUsuarios.Instancia.Usuarios().Count);
         Assert.IsInstanceOfType(AdministrarUsuarios.Instancia.Usuarios()[1], typeof(Administrador));
     }
@@ -37,14 +37,14 @@ public class AdministrarUsuariosTests
     [ExpectedException(typeof(UnauthorizedAccessException))]
     public void CrearUsuario_NoAdmin_DeberiaLanzar()
     {
-        AdministrarUsuarios.Instancia.CrearUsuario(vendedor, "X", "Y", "x@y.com", "091", "6789",TipoRol.VENDEDOR);
+        AdministrarUsuarios.Instancia.CrearUsuario(vendedor, "X", "Y", "x@y.com", "091", "6789","vendedor");
     }
 
     [TestMethod]
     public void EliminarUsuario_Admin_DeberiaEliminar()
     {
         // Crear 2 usuarios
-        AdministrarUsuarios.Instancia.CrearUsuario(admin, "U1", "U1", "u1@test.com", "01", "1642",TipoRol.VENDEDOR);
+        AdministrarUsuarios.Instancia.CrearUsuario(admin, "U1", "U1", "u1@test.com", "01", "1642","vendedor");
         var u = AdministrarUsuarios.Instancia.Usuarios()[0];
         Assert.AreEqual(1, AdministrarUsuarios.Instancia.Usuarios().Count);
 
@@ -56,7 +56,7 @@ public class AdministrarUsuariosTests
     [ExpectedException(typeof(UnauthorizedAccessException))]
     public void EliminarUsuario_NoAdmin_DeberiaLanzar()
     {
-        AdministrarUsuarios.Instancia.CrearUsuario(admin, "U1", "U1", "u1@test.com", "u1", "2542",TipoRol.VENDEDOR);
+        AdministrarUsuarios.Instancia.CrearUsuario(admin, "U1", "U1", "u1@test.com", "u1", "2542","vendedor");
         var u = AdministrarUsuarios.Instancia.Usuarios()[0];
         AdministrarUsuarios.Instancia.EliminarUsuario(vendedor, u);
     }
@@ -64,7 +64,7 @@ public class AdministrarUsuariosTests
     [TestMethod]
     public void SuspenderYRehabilitarUsuario_Admin_DeberiaCambiarEstado()
     {
-        AdministrarUsuarios.Instancia.CrearUsuario(admin, "U2", "U2", "u2@test.com", "02", "2531",TipoRol.VENDEDOR);
+        AdministrarUsuarios.Instancia.CrearUsuario(admin, "U2", "U2", "u2@test.com", "02", "2531","vendedor");
         var u = AdministrarUsuarios.Instancia.Usuarios()[0];
         AdministrarUsuarios.Instancia.SuspenderUsuario(admin, u);
         Assert.IsTrue(u.Suspendido);
@@ -78,7 +78,7 @@ public class AdministrarUsuariosTests
     public void SuspenderUsuario_NoPuedeSuspenderAdmin()
     {
         // Crear otro admin
-        AdministrarUsuarios.Instancia.CrearUsuario(admin, "Super", "Admin", "s@a.com", "03", "63q23",TipoRol.ADMINISTRADOR);
+        AdministrarUsuarios.Instancia.CrearUsuario(admin, "Super", "Admin", "s@a.com", "03", "63q23","administrador");
         var otroAdmin = AdministrarUsuarios.Instancia.Usuarios()[0];
         AdministrarUsuarios.Instancia.SuspenderUsuario(admin, otroAdmin); // debe lanzar
     }
@@ -93,7 +93,7 @@ public class AdministrarUsuariosTests
     [TestMethod]
     public void VerTodos_Admin_DeberiaRetornarLista()
     {
-        AdministrarUsuarios.Instancia.CrearUsuario(admin, "U1", "U1", "u1@test.com", "01", "3563",TipoRol.VENDEDOR);
+        AdministrarUsuarios.Instancia.CrearUsuario(admin, "U1", "U1", "u1@test.com", "01", "3563","vendedor");
         var list = AdministrarUsuarios.Instancia.VerTodos(admin);
         Assert.IsNotNull(list);
         Assert.AreEqual(1, list.Count);
