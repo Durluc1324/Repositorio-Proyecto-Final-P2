@@ -4,6 +4,20 @@
         <name>Library</name>
     </assembly>
     <members>
+        <member name="M:ClassLibrary.AdministrarClientes.CrearCliente(ClassLibrary.Usuario,System.String,System.String,System.String,System.String,System.String,System.DateTime)">
+            <summary>
+            Este método se encarga de generar los comandos
+            </summary>
+            <param name="solicitante"></param>
+            <param name="nombre"></param>
+            <param name="apellido"></param>
+            <param name="email"></param>
+            <param name="telefono"></param>
+            <param name="genero"></param>
+            <param name="fechaNacimiento"></param>
+            <returns></returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
         <member name="T:ClassLibrary.IBot">
             <summary>
             La interfaz del Bot de Discord para usar con inyección de dependencias.

@@ -17,7 +17,7 @@ public class BuscarClientesSinInteraccionCommand: ModuleBase<SocketCommandContex
     }
 
     [Command("buscarclientesininteracciondesde")]
-    public async Task BuscarClientesSinInteraccionDesdeCommandAsync([Remainder]string mensaje)
+    public async Task BuscarClientesSinInteraccionDesdeCommandAsync(string mensaje)
     {
         
         //Recibe algo como !buscarclientesininteracciondesde 30:11:2025

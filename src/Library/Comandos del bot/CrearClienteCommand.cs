@@ -55,11 +55,19 @@ public class CrearClienteCommand : ModuleBase<SocketCommandContext>
             return;
         }
 
+        try
+        {
+            Cliente cliente = Fachada.FachadaSistema.DelegarCrearCliente(vendedor, nombre, apellido, email, telefono,
+                genero, fecha);
 
-        Cliente cliente = Fachada.FachadaSistema.DelegarCrearCliente(vendedor, nombre, apellido, email, telefono,
-            genero, fecha);
+            await ReplyAsync($"El cliente {cliente.Nombre} {cliente.Apellido} ha sido creado correctamente");
+        }
+        catch (Exception ex)
+        {
+            await ReplyAsync("No se ha podido crear el cliente");
+            return;
+        }
         
-        await ReplyAsync($"El cliente {cliente.Nombre} {cliente.Apellido} ha sido creado correctamente");
     }
 
 }
