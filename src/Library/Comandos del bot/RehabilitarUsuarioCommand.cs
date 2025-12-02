@@ -31,6 +31,12 @@ public class RehabilitarUsuarioCommand: ModuleBase<SocketCommandContext>
             await ReplyAsync("Solo los administradores pueden rehabilitar usuarios.");
             return;
         }
+
+        if (string.IsNullOrEmpty(emailOTelefono))
+        {
+            await ReplyAsync("Formato incorrecto: use '!rehabilitarusuario EmailOTelefonoUsuario'");
+            return;
+        }
         
         Usuario usuarioARehabilitar = Fachada.FachadaSistema.DelegarBuscarUsuario(emailOTelefono);
         if (usuarioARehabilitar == null)

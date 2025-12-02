@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using ClassLibrary;
-using ClassLibrary.Excepciones;
 using Discord.Commands;
 namespace Library.Comandos_del_bot;
 
@@ -64,8 +66,8 @@ public class CrearClienteCommand : ModuleBase<SocketCommandContext>
         }
         catch (Exception ex)
         {
-            await ReplyAsync("No se ha podido crear el cliente");
-            return;
+            await ReplyAsync($"Error: {ex}");
+
         }
         
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ClassLibrary;
 using Discord.Commands;
@@ -14,66 +15,57 @@ public class ModificarClienteCommand: ModuleBase<SocketCommandContext>
     }
 
     [Command("modificarcliente")]
-    public async Task ModificarClienteAsync([Remainder]string mensaje)
+    public async Task ModificarClienteAsync(string email, [Remainder] string mensaje)
     {
-        //divide el mensaje en una array de strings para poder organizar los datos
-        string[] partes = mensaje.Split(" ");
-        
-        //Si no tiene el formato inválido, lanza error
-        if (partes.Length < 2)
+        // Validación básica
+        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(mensaje))
         {
-            await ReplyAsync("Formato incorrecto. Usa: `!modificarusuario email parametro:valor ...`");
+            await ReplyAsync("Formato incorrecto. Usa: `!modificarcliente email parametro:valor ...`");
             return;
-            
         }
-        
-        //Si el usuario no está logueado, no se realiza la tarea.
+
         Usuario vendedor = sessions.GetUsuario(Context.User.Id);
         if (vendedor == null)
         {
             await ReplyAsync("Debes iniciar sesión primero con `!login`.");
             return;
         }
-        
-        //Busca entre los clientes del usuario al cliente con ese mail, si no lo tiene, lo informa
-        string emailBuscado = partes[0];
-        Cliente cliente = null;
 
-        foreach (Cliente c in vendedor.ClientesAsignados)
+        // Buscar cliente por email
+        List<Cliente> listaClientes = Fachada.FachadaSistema.DelegarBuscarClientes(email);
+
+        if (listaClientes.Count == 0)
         {
-            if (c.Email == emailBuscado)
-            {
-                cliente = c;
-                break;
-            }
-        }
-        
-        if (cliente == null)
-        {
-            await ReplyAsync("No tienes un cliente con ese email. Usa `!verclientes` para ver tu lista.");
+            await ReplyAsync("No existe un cliente con ese email.");
             return;
         }
-        
-        // variables auxiliares para luego
+        if (listaClientes.Count > 1)
+        {
+            await ReplyAsync("Multiples clientes encontrados. Use un dato único.");
+            return;
+        }
+
+        Cliente cliente = listaClientes[0]; // ← ahora sí
+
+        // PARTES: ahora divido el mensaje por espacios
+        // Ejemplo: "nombre:Tom apellido:Riddle telefono:123"
+        string[] partes = mensaje.Split(" ");
+
         string nombre = null;
         string apellido = null;
         string emailNuevo = null;
         string telefono = null;
         string genero = null;
         DateTime? fechaNacimiento = null;
-        
-        //
-        for (int i = 1; i < partes.Length; i++)
-        {
-            string param = partes[i];
 
-            // Si no tiene ":", lo ignoramos
-            int pos = param.IndexOf(":");
-            if (pos == -1)
+        foreach (string param in partes)
+        {
+            int idx = param.IndexOf(":");
+            if (idx == -1)
                 continue;
 
-            string clave = param.Substring(0, pos).ToLower();
-            string valor = param.Substring(pos + 1);
+            string clave = param.Substring(0, idx).ToLower();
+            string valor = param.Substring(idx + 1);
 
             switch (clave)
             {
@@ -98,11 +90,11 @@ public class ModificarClienteCommand: ModuleBase<SocketCommandContext>
                     break;
 
                 case "fecha":
-                    string[] fechaPartes = valor.Split(":");
-                    if (fechaPartes.Length == 3 &&
-                        int.TryParse(fechaPartes[0], out int dia) &&
-                        int.TryParse(fechaPartes[1], out int mes) &&
-                        int.TryParse(fechaPartes[2], out int año))
+                    string[] f = valor.Split(":");
+                    if (f.Length == 3 &&
+                        int.TryParse(f[0], out int dia) &&
+                        int.TryParse(f[1], out int mes) &&
+                        int.TryParse(f[2], out int año))
                     {
                         try
                         {
@@ -113,12 +105,14 @@ public class ModificarClienteCommand: ModuleBase<SocketCommandContext>
                     break;
             }
         }
-        
-        Fachada.FachadaSistema.DelegarModificarCliente(vendedor, cliente, nombre, apellido, 
-            emailNuevo, telefono, genero, fechaNacimiento);
-        
-        await ReplyAsync($"El cliente {cliente.Nombre} {cliente.Apellido} fue modificado correctamente.");
 
+        Fachada.FachadaSistema.DelegarModificarCliente(
+            vendedor, cliente, nombre, apellido,
+            emailNuevo, telefono, genero, fechaNacimiento
+        );
 
+        await ReplyAsync(
+            $"El cliente {cliente.Nombre} {cliente.Apellido} fue modificado correctamente."
+        );
     }
 }

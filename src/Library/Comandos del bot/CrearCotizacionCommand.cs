@@ -17,12 +17,20 @@ public class CrearCotizacionCommand: ModuleBase<SocketCommandContext>
     }
 
     [Command("crearcotizacion")]
-public async Task CrearCotizacionCommandAsync(string emailOTelefonoCliente, string fecha, string fechaLimite, string descripcion)
+public async Task CrearCotizacionCommandAsync(string emailOTelefonoCliente, string fechaLimite, [Remainder]string descripcion)
 {
     Usuario vendedor = sessions.GetUsuario(Context.User.Id);
     if (vendedor == null)
     {
         await ReplyAsync("Debes iniciar sesión primero con `!login`.");
+        return;
+    }
+
+    if (string.IsNullOrEmpty(emailOTelefonoCliente)  || string.IsNullOrEmpty(fechaLimite)
+        || string.IsNullOrEmpty(descripcion))
+    {
+        await ReplyAsync("Formato incorrecto: use '!crearcotizacion EmailOTelefonoCliente  dd:mm:yyyy descrición' \n" +
+                         "La fecha subida es la fecha de vencimiento de la cotización ");
         return;
     }
 
@@ -41,29 +49,8 @@ public async Task CrearCotizacionCommandAsync(string emailOTelefonoCliente, stri
     }
 
     Cliente cliente = clientes[0];
-
-    // ---- PARSE FECHA REALIZADA ----
-    string[] fechaRealizado = fecha.Split(":");
-
-    if (fechaRealizado.Length != 3 ||
-        !int.TryParse(fechaRealizado[0], out int dia1) ||
-        !int.TryParse(fechaRealizado[1], out int mes1) ||
-        !int.TryParse(fechaRealizado[2], out int año1))
-    {
-        await ReplyAsync("La fecha debe tener formato dd:mm:yyyy");
-        return;
-    }
-
-    DateTime fechaCotizacionRealizada;
-    try
-    {
-        fechaCotizacionRealizada = new DateTime(año1, mes1, dia1);
-    }
-    catch
-    {
-        await ReplyAsync("La fecha ingresada no es válida.");
-        return;
-    }
+    
+    DateTime fechaCotizacionRealizada = DateTime.Now;
 
     // ---- PARSE FECHA LÍMITE ----
     string[] fechaLimitada = fechaLimite.Split(":");

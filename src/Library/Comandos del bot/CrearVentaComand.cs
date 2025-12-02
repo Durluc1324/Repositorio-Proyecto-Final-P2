@@ -23,7 +23,7 @@ public async Task CrearVentaAsync([Remainder]string mensaje)
 
         if (partes.Length < 4)
         {
-            await ReplyAsync("Formato incorrecto. Usa: `!crearventa correo producto precio cantidad ...`");
+            await ReplyAsync("Formato incorrecto. Usa: '!crearventa correo producto precio cantidad ...'");
             return;
         }
 

@@ -31,7 +31,7 @@ namespace ClassLibrary
                 .AddSingleton<DiscordSocketClient>()
                 .AddSingleton<CommandService>()
 
-                .AddScoped<IBot, Bot>();
+                .AddSingleton<IBot, Bot>();
 
             // Construimos el ServiceProvider
             var serviceProvider = services.BuildServiceProvider();

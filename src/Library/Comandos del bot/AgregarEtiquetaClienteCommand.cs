@@ -20,7 +20,7 @@ public class AgregarEtiquetaClienteCommand: ModuleBase<SocketCommandContext>
     {
         if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(etiqueta))
         {
-            await ReplyAsync("Formato inválido. Uso: `!agregaretiquetacliente email etiqueta`");
+            await ReplyAsync("Formato inválido. Uso: `!agregaretiquetacliente EmailCLiente etiqueta`");
             return;
         }
 
