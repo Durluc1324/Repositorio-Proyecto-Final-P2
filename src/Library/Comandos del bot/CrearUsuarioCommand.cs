@@ -38,7 +38,7 @@ public class CrearUsuarioCommand: ModuleBase<SocketCommandContext>
             string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(telefono) ||
             string.IsNullOrWhiteSpace(contraseña) || string.IsNullOrWhiteSpace(rol))
         {
-            await ReplyAsync("Formato incorrecto. Uso: !crearusuario nombre apellido email telefono contraseña rol");
+            await ReplyAsync("Formato incorrecto. Uso: '!crearusuario nombre apellido email telefono contraseña rol'");
             return;
         }
 

@@ -36,6 +36,7 @@ namespace ClassLibrary
             throw new InvalidOperationException("Usuario suspendido.");
 
         Cliente cliente = new Cliente(nombre, apellido, email, telefono, genero, fechaNacimiento, solicitante);
+        
         _clientes.Add(cliente);
         solicitante.ClientesAsignados.Add(cliente);
         return cliente;

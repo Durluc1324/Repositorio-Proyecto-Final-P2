@@ -31,6 +31,12 @@ public class SuspenderUsuarioCommand: ModuleBase<SocketCommandContext>
             await ReplyAsync("Solo los administradores pueden suspender usuarios.");
             return;
         }
+        
+        if (string.IsNullOrEmpty(emailOTelefono))
+        {
+            await ReplyAsync("Formato incorrecto: use '!suspenderusuario EmailOTelefonoUsuario'");
+            return;
+        }
 
         Usuario usuarioASuspender = Fachada.FachadaSistema.DelegarBuscarUsuario(emailOTelefono);
         if (usuarioASuspender == null)

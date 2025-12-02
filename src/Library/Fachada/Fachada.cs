@@ -14,10 +14,9 @@ public class Fachada
     public Cliente DelegarCrearCliente(Usuario solicitante, string nombre, string apellido, string email,
         string telefono, string genero, DateTime fechaNacimiento)
     {
-        Cliente clienteNuevo = AdministrarClientes.Instancia.CrearCliente(solicitante, nombre, apellido, email,
-            telefono, genero,
-            fechaNacimiento);
-        return clienteNuevo;
+        return AdministrarClientes.Instancia.CrearCliente(solicitante, nombre, apellido, email,
+            telefono, genero, fechaNacimiento);
+        
     }
 
     public void DelegarModificarCliente(Usuario solicitante, Cliente cliente,

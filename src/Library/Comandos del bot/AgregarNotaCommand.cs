@@ -16,7 +16,7 @@ public class AgregarNotaCommand: ModuleBase<SocketCommandContext>
     }
 
     [Command("agregarnota")]
-    public async Task AgregarNotaAsync(int index, [Remainder] string nota)
+    public async Task AgregarNotaAsync(string indice, [Remainder] string nota)
     {
         Usuario vendedor = sessions.GetUsuario(Context.User.Id);
         if (vendedor == null)
@@ -24,12 +24,20 @@ public class AgregarNotaCommand: ModuleBase<SocketCommandContext>
             await ReplyAsync("Debes iniciar sesión primero con `!login`.");
             return;
         }
+        
+        int index = int.Parse(indice);
 
         List<Interaccion> interacciones = Fachada.FachadaSistema.DelegarObtenerInteraccionesDe(vendedor);
 
         if (index < 1 || index > interacciones.Count)
         {
             await ReplyAsync("Índice inválido. Usa `!misinteracciones` para ver los números correctos.");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(indice) || string.IsNullOrEmpty(nota))
+        {
+            await ReplyAsync("Formato incorrecto: use '!agregarnota indice nota'");
             return;
         }
 

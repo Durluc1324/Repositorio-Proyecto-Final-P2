@@ -23,7 +23,7 @@ public class EliminarClienteCommand: ModuleBase<SocketCommandContext>
 
         if (partes.Length == 0)
         {
-            await ReplyAsync("No se ha introducido datos suficientes. Usa '!eliminarcliente email' o '!eliminarcliente telefono'.");
+            await ReplyAsync("No se ha introducido datos suficientes. Usa '!eliminarcliente emailOTelefono'.");
             return;
         }
         
