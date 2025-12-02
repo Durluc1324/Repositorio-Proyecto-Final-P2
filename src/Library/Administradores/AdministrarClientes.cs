@@ -17,6 +17,18 @@ namespace ClassLibrary
     {
     }
 
+    /// <summary>
+    /// Este método se encarga de generar los comandos
+    /// </summary>
+    /// <param name="solicitante"></param>
+    /// <param name="nombre"></param>
+    /// <param name="apellido"></param>
+    /// <param name="email"></param>
+    /// <param name="telefono"></param>
+    /// <param name="genero"></param>
+    /// <param name="fechaNacimiento"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
     public Cliente CrearCliente(Usuario solicitante, string nombre, string apellido, string email, string telefono,
         string genero, DateTime fechaNacimiento)
     {
