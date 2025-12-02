@@ -72,7 +72,44 @@ namespace ClassLibrary
         cliente.UsuarioAsignado?.ClientesAsignados.Remove(cliente);
     }
 
-    public List<Cliente> BuscarClientes(string criterio)
+    public List<Cliente> BuscarClientes(Usuario solicitante, string criterio)
+    {
+        if (string.IsNullOrWhiteSpace(criterio))
+            throw new ArgumentException("Debe indicar un criterio de búsqueda.");
+
+        List<Cliente> clientesEncontrados = new List<Cliente>();
+
+        foreach (Cliente c in solicitante.ClientesAsignados)
+        {
+            bool coincide = (c.Nombre.IndexOf(criterio, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                            (c.Apellido.IndexOf(criterio, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                            (c.Email.IndexOf(criterio, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                            (c.Telefono.IndexOf(criterio, StringComparison.OrdinalIgnoreCase) >= 0);
+
+            // Revisar nombre, apellido, email y teléfono
+
+            // Revisar etiquetas
+            if (!coincide && c.Etiquetas.Count>0)
+            {
+                foreach (string etiqueta in c.Etiquetas)
+                {
+                    if (!string.IsNullOrEmpty(etiqueta) &&
+                        etiqueta.IndexOf(criterio, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        coincide = true;
+                        break; // No hace falta seguir revisando etiquetas
+                    }
+                }
+            }
+
+            if (coincide)
+                clientesEncontrados.Add(c);
+        }
+
+        return clientesEncontrados;
+    }
+    
+    public List<Cliente> BuscarClientesEnGlobal( string criterio)
     {
         if (string.IsNullOrWhiteSpace(criterio))
             throw new ArgumentException("Debe indicar un criterio de búsqueda.");

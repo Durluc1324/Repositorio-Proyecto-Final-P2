@@ -18,9 +18,9 @@ public class CrearEmailCommand : ModuleBase<SocketCommandContext>
     }
 
     [Command("crearemail")]
-    public async Task CrearEmailCommandAsync([Remainder] string mensaje)
+    public async Task CrearEmailCommandAsync(string correoEmisor, string correoReceptor, string fecha, [Remainder]string temaYContenido)
     {
-        if (string.IsNullOrEmpty(mensaje))
+        if (string.IsNullOrEmpty(correoEmisor) || string.IsNullOrEmpty(correoReceptor) || string.IsNullOrEmpty(fecha) || string.IsNullOrEmpty(temaYContenido))
         {
             await ReplyAsync("Formato incorrecto.\nUso: `!crearemail correoemisor correoreceptor dd:mm:yyyy tema | contenido`");
             return;
@@ -33,7 +33,7 @@ public class CrearEmailCommand : ModuleBase<SocketCommandContext>
             return;
         }
 
-        var partes = mensaje.Split("|");
+        var partes = temaYContenido.Split("|");
         if (partes.Length != 2)
         {
             await ReplyAsync("Debes separar el tema del contenido con `|`.");
@@ -41,45 +41,42 @@ public class CrearEmailCommand : ModuleBase<SocketCommandContext>
         }
 
         string datosPrincipales = partes[0].Trim();
-        string contenido = partes[1].Trim();
+        
+        
+        string[] tema_Contenido = temaYContenido.Split("|");
+        string contenido = tema_Contenido[1].Trim();
+        string tema = tema_Contenido[0].Trim();
 
-        string[] datos = datosPrincipales.Split(" ");
-
-        if (datos.Length < 4)
-        {
-            await ReplyAsync(
-                "Faltan datos. Uso: `!crearemail correoemisor correoreceptor dd:mm:yyyy tema | contenido`");
-            return;
-        }
+        
 
         Persona emisor = null;
         Persona receptor = null;
 
-        if (vendedor.Email.Equals(datos[0]))
+        if (vendedor.Email.Equals(correoEmisor))
         {
             emisor = vendedor;
-            receptor = Fachada.FachadaSistema.BuscarPersona(datos[1]);
+            receptor = Fachada.FachadaSistema.BuscarPersona(correoReceptor);
         }
-        else if (vendedor.Email.Equals(datos[1]))
+        else if (vendedor.Email.Equals(correoReceptor))
         {
-            emisor = Fachada.FachadaSistema.BuscarPersona(datos[0]);
+            emisor = Fachada.FachadaSistema.BuscarPersona(correoEmisor);
             receptor = vendedor;
         }
 
         if (emisor == null)
         {
-            await ReplyAsync($"No se encontró al emisor con el correo {datos[0]}");
+            await ReplyAsync($"No se encontró al emisor con el correo {correoEmisor}");
             return;
         }
 
         if (receptor == null)
         {
-            await ReplyAsync($"No se encontró al receptor con el correo {datos[1]}");
+            await ReplyAsync($"No se encontró al receptor con el correo {correoReceptor}");
             return;
         }
 
         // Parseo de fecha
-        string[] partesFecha = datos[2].Split(":");
+        string[] partesFecha = fecha.Split(":");
         if (partesFecha.Length != 3 ||
             !int.TryParse(partesFecha[0], out int dia) ||
             !int.TryParse(partesFecha[1], out int mes) ||
@@ -99,8 +96,7 @@ public class CrearEmailCommand : ModuleBase<SocketCommandContext>
             await ReplyAsync("La fecha ingresada no es válida.");
             return;
         }
-
-        string tema = string.Join(" ", datos.Skip(3));
+        
 
         Email email = Fachada.FachadaSistema.DelegarCrearEmail(
             emisor, receptor, fechaEmail, tema, contenido

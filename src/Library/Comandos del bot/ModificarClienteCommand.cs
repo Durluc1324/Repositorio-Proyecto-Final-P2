@@ -32,11 +32,11 @@ public class ModificarClienteCommand: ModuleBase<SocketCommandContext>
         }
 
         // Buscar cliente por email
-        List<Cliente> listaClientes = Fachada.FachadaSistema.DelegarBuscarClientes(email);
+        List<Cliente> listaClientes = Fachada.FachadaSistema.DelegarBuscarClientes(vendedor, email);
 
         if (listaClientes.Count == 0)
         {
-            await ReplyAsync("No existe un cliente con ese email.");
+            await ReplyAsync("No existe un cliente con ese email dentro de tus clientes");
             return;
         }
         if (listaClientes.Count > 1)

@@ -33,7 +33,7 @@ public class VerInteraccionConClienteCommand: ModuleBase<SocketCommandContext>
         }
 
         // Buscar al cliente
-        List<Cliente> clientes = Fachada.FachadaSistema.DelegarBuscarClientes(emailCliente);
+        List<Cliente> clientes = Fachada.FachadaSistema.DelegarBuscarClientes(vendedor, emailCliente);
 
         if (clientes.Count == 0)
         {
@@ -79,16 +79,54 @@ public class VerInteraccionConClienteCommand: ModuleBase<SocketCommandContext>
         // Armar mensaje de salida
         StringBuilder sb = new StringBuilder();
         sb.AppendLine($"Interacciones entre **{vendedor.Nombre}** y **{cliente.Nombre} {cliente.Apellido}**:");
-        sb.AppendLine("--------------------------------------------------");
 
         foreach (var item in interaccionesFiltradas)
         {
             int originalIndex = item.index + 1;
             Interaccion it = item.it;
+            sb.AppendLine("--------------------------------------------------");
 
-            sb.AppendLine($"{originalIndex}) {it.GetType().Name} — {it.Fecha:dd/MM/yyyy} — " + 
-                          $"{it.Emisor.Email} → {it.Receptor.Email} — \"{it.Tema}\"");
+            if (it is Email email)
+            {
+                sb.AppendLine($"{originalIndex}) {email.GetType().Name}");
+                sb.AppendLine($"Fecha: {email.Fecha: dd/MM/yyyy}");
+                sb.AppendLine($"Emisor: {it.Emisor.Email}");
+                sb.AppendLine($"Receptor: {it.Receptor.Email}");
+                sb.AppendLine($"Tema: {email.Tema}");
+                sb.AppendLine($"Contenido: {email.Contenido}");
+                sb.AppendLine($"Nota: {it.Nota}");
+            }
+            else if (it is Mensaje mensaje)
+            {
+                sb.AppendLine($"{originalIndex}) {mensaje.GetType().Name}");
+                sb.AppendLine($"Fecha: {mensaje.Fecha: dd/MM/yyyy}");
+                sb.AppendLine($"Emisor: {it.Emisor.Telefono} ({it.Emisor.Nombre} {it.Emisor.Apellido})");
+                sb.AppendLine($"Receptor: {it.Receptor.Telefono} ({it.Receptor.Nombre} {it.Receptor.Apellido})");
+                sb.AppendLine($"Contenido: {mensaje.Tema}");
+                sb.AppendLine($"Nota: {it.Nota}");
+
+            }
+            else if (it is Llamada llamada)
+            {
+                sb.AppendLine($"{originalIndex}) {llamada.GetType().Name}");
+                sb.AppendLine($"Fecha: {llamada.Fecha: dd/MM/yyyy}");
+                sb.AppendLine($"Numero emisor: {llamada.NumeroEmisor} ({llamada.Emisor.Nombre} {llamada.Emisor.Apellido})");
+                sb.AppendLine($"Numero emisor: {llamada.NumeroReceptor} ({llamada.Receptor.Nombre} {llamada.Receptor.Apellido})");
+                sb.AppendLine($"Nota: {it.Nota}");
+            }
+            else if (it is Reuniones reunion)
+            {
+                sb.AppendLine($"{originalIndex}) {reunion.GetType().Name}");
+                sb.AppendLine($"Fecha de reunión: {reunion.Fecha: dd/MM/yyyy}");
+                sb.AppendLine($"Reunión con: {reunion.Receptor.Nombre} {reunion.Receptor.Apellido}");
+                sb.AppendLine($"Lugar de reunion: {reunion.Lugar}");
+                sb.AppendLine($"Tema: {reunion.Tema}");
+                sb.AppendLine($"Nota: {it.Nota}");
+            }
+            
         }
+        sb.AppendLine("--------------------------------------------------");
+
 
         await ReplyAsync(sb.ToString());
     }

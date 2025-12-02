@@ -40,7 +40,7 @@ public class AsignarClienteAOtroVendedorCommand: ModuleBase<SocketCommandContext
         }
 
         // Buscar el cliente correcto
-        List<Cliente> clientes = Fachada.FachadaSistema.DelegarBuscarClientes(emailOTelefonoCliente);
+        List<Cliente> clientes = Fachada.FachadaSistema.DelegarBuscarClientes(vendedor, emailOTelefonoCliente);
 
         if (clientes.Count == 0)
         {

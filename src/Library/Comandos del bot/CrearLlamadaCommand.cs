@@ -17,9 +17,9 @@ public class CrearLlamadaCommand: ModuleBase<SocketCommandContext>
     }
 
     [Command("crearllamada")]
-    public async Task CrearLlamadaCommandAsync([Remainder]string mensaje)
+    public async Task CrearLlamadaCommandAsync(string numeroCliente, string fechaCreacion, [Remainder]string tema)
     {
-        if (string.IsNullOrEmpty(mensaje))
+        if (string.IsNullOrEmpty(numeroCliente) || string.IsNullOrEmpty(fechaCreacion) || string.IsNullOrEmpty(tema))   
         {
             await ReplyAsync("No se han introducido datos suficientes. Use '!crearllamada NumeroDelCliente dd:mm:yyyy Tema'");
             return;
@@ -32,10 +32,16 @@ public class CrearLlamadaCommand: ModuleBase<SocketCommandContext>
             return;
         }
 
-        string[] datos = mensaje.Split(" ");
-        List<Cliente> cliente = Fachada.FachadaSistema.DelegarBuscarClientes(datos[0]);
-        string fecha = datos[1];
-        string[] partesFecha = fecha.Split(":");
+        
+        List<Cliente> cliente = Fachada.FachadaSistema.DelegarBuscarClientes(vendedor,numeroCliente);
+
+        if (cliente.Count > 1)
+        {
+            await ReplyAsync("Se han encontrado múltiples clientes. Por favor revise usar un correo único o pruebe usando un dato único del cliente");
+            return;
+        }
+        
+        string[] partesFecha = fechaCreacion.Split(":");
         
         if (partesFecha.Length != 3 ||
             !int.TryParse(partesFecha[0], out int dia) ||
@@ -58,7 +64,7 @@ public class CrearLlamadaCommand: ModuleBase<SocketCommandContext>
             return;
         }
 
-        Llamada llamada = Fachada.FachadaSistema.DelegarCrearLlamada(vendedor, cliente[0], fechadeLlamada, datos[2]);
+        Llamada llamada = Fachada.FachadaSistema.DelegarCrearLlamada(vendedor, cliente[0], fechadeLlamada, tema);
 
         await ReplyAsync($"La llamada con {llamada.Receptor.Nombre} {llamada.Receptor.Apellido} ha sido añadida");
     }

@@ -33,7 +33,7 @@ public class AgregarEtiquetaClienteCommand: ModuleBase<SocketCommandContext>
         }
 
         // Buscar cliente
-        List<Cliente> clientes = Fachada.FachadaSistema.DelegarBuscarClientes(email);
+        List<Cliente> clientes = Fachada.FachadaSistema.DelegarBuscarClientes(vendedor,email);
 
         if (clientes.Count == 0)
         {

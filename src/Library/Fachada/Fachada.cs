@@ -32,9 +32,9 @@ public class Fachada
         AdministrarClientes.Instancia.EliminarCliente(solicitante, cliente);
     }
 
-    public List<Cliente> DelegarBuscarClientes(string criterio)
+    public List<Cliente> DelegarBuscarClientes(Usuario solicitante, string criterio)
     {
-        return AdministrarClientes.Instancia.BuscarClientes(criterio);
+        return AdministrarClientes.Instancia.BuscarClientes(solicitante,criterio);
     }
 
     public void DelegarAgregarEtiquetaCliente(Usuario solicitante, Cliente cliente, string etiqueta)
@@ -141,7 +141,7 @@ public class Fachada
 
     public Persona BuscarPersona(string criterio)
     {
-        var clientes = AdministrarClientes.Instancia.BuscarClientes(criterio);
+        var clientes = AdministrarClientes.Instancia.BuscarClientesEnGlobal(criterio);
     
         if (clientes.Count == 1)
             return clientes[0];
@@ -162,27 +162,6 @@ public class Fachada
     {
         return AdministrarVentas.Instancia.CrearVenta(usuario, cliente, fecha);
     }
-
-    public List<Venta> DelegarBuscarTodasPorRango(Usuario usuario, DateTime inicio, DateTime fin)
-    {
-        return AdministrarVentas.Instancia.BuscarTodasPorRango(usuario, inicio, fin);
-    }
-
-    public List<Venta> DelegarBuscarVentasComoAdmin(string criterio, DateTime? fecha, Cliente? cliente, Usuario? vendedor)
-    {
-        return AdministrarVentas.Instancia.BuscarVentasComoAdmin(criterio, fecha, cliente, vendedor);
-    }
-
-    public List<Venta> DelegarBuscarVentaComoUsuario(Usuario usuario, string criterio, DateTime? fecha)
-    {
-        return AdministrarVentas.Instancia.BuscarVentaComoUsuario(usuario, criterio, fecha);
-    }
-
-    public void DelegarAgregarProducto(Venta venta, string nombre, double precio, int cantidad)
-    {
-        AdministrarVentas.Instancia.AgregarProducto(venta, nombre, precio, cantidad);
-    }
-    
 
     public List<Venta> DelegarObtenerVentasPeriodo(Usuario usuario, DateTime inicio, DateTime fin)
     {

@@ -38,25 +38,47 @@ public class YoCommand : ModuleBase<SocketCommandContext>
     private string ConstruirPanelUsuario(Usuario u)
     {
         var panel = new StringBuilder();
+        panel.AppendLine("---------------------------");
         panel.AppendLine("--Información del Usuario--");
+        panel.AppendLine("---------------------------");
         panel.AppendLine($"Nombre: {u.Nombre}");
         panel.AppendLine($"Apellido: {u.Apellido}");
         panel.AppendLine($"Teléfono: {u.Telefono}");
-        panel.AppendLine();
+        panel.AppendLine($"Correo Electrónico: {u.Email}");
+        
+        
+        if (u.Rol == TipoRol.USUARIO)
+        {
+            panel.AppendLine("Rol: Usuario");
+        }
+        else if (u.Rol == TipoRol.VENDEDOR)
+        {
+            panel.AppendLine("Rol: Vendedor");
+        }
+        else panel.AppendLine("Rol: Administrador");
+        
+        panel.AppendLine("---------------------------");
+
         panel.AppendLine();
         // ==============================
         // CLIENTES
         // ==============================
         panel.AppendLine("--Clientes Totales--");
+        panel.AppendLine("----------------------");
+        panel.AppendLine();
         panel.AppendLine($"Cantidad: {u.ClientesAsignados.Count}");
-
+        panel.AppendLine();
         foreach (var c in u.ClientesAsignados)
         {
+            panel.AppendLine("----------");
             panel.AppendLine($"• {c.Nombre} {c.Apellido}");
             panel.AppendLine($"   Tel: {c.Telefono}");
             panel.AppendLine($"   Email: {c.Email}");
+            panel.AppendLine($"   Genero: {c.Genero}");
+
         }
-        panel.AppendLine();
+        panel.AppendLine("----------------------");
+
         panel.AppendLine();
 
         // ==============================
