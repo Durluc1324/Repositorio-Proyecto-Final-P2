@@ -57,18 +57,6 @@ namespace TestProject1
             Assert.AreEqual(1, venta.Productos[prod]); // cantidad
         }
 
-        // -------------------------------
-        // BUSQUEDA ADMIN
-        // -------------------------------
-        [TestMethod]
-        public void BuscarVentasComoAdmin_FiltraPorNombreCliente()
-        {
-            var venta = adminVentas.CrearVenta(vendedor, cliente, DateTime.Now);
-
-            var resultados = adminVentas.BuscarVentasComoAdmin("carl", null, null, null);
-
-            Assert.AreEqual(1, resultados.Count);
-            Assert.AreEqual(venta, resultados[0]);
-        }
+        
     }
 }

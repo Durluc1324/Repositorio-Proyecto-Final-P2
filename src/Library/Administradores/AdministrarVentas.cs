@@ -6,7 +6,7 @@ namespace ClassLibrary
 {
     public class AdministrarVentas
 {
-    // Singleton (nombre consistente con el resto)
+    // Singleton 
     private static readonly AdministrarVentas _instancia = new AdministrarVentas();
     public static AdministrarVentas Instancia => _instancia;
     private readonly List<Venta> _ventas = new List<Venta>();
@@ -17,6 +17,13 @@ namespace ClassLibrary
     }
     
 
+    /// <summary>
+    /// Crea una instancia de una venta
+    /// </summary>
+    /// <param name="usuario"></param>
+    /// <param name="cliente"></param>
+    /// <param name="fecha"></param>
+    /// <returns></returns>
     public Venta CrearVenta(Usuario usuario, Cliente cliente, DateTime fecha)
     {
             ArgumentNullException.ThrowIfNull(usuario);
@@ -27,117 +34,14 @@ namespace ClassLibrary
         return nueva;
     }
     
-    public List<Venta> BuscarTodasPorRango(Usuario usuario, DateTime inicio, DateTime fin)
-    {
-        List<Venta> resultados = new List<Venta>();
-
-        foreach (Venta venta in usuario.ListaVentas)
-        {
-            if (venta.Fecha >= inicio && venta.Fecha <= fin)
-            {
-                resultados.Add(venta);
-            }
-        }
-
-        return resultados;
-    }
-    
-    public List<Venta> BuscarVentasComoAdmin(
-        string criterio,
-        DateTime? fecha,
-        Cliente? cliente,
-        Usuario? vendedor)
-    {
-        if (string.IsNullOrWhiteSpace(criterio) &&
-            !fecha.HasValue &&
-            cliente == null &&
-            vendedor == null)
-        {
-            throw new InvalidOperationException("No se introdujo ningún criterio de búsqueda.");
-        }
-        
-        List<Venta> resultados = new List<Venta>();
-        criterio = criterio?.ToLower();
-
-        
-        foreach (var venta in _ventas)
-        {
-            bool coincide = true;
-
-            if (!string.IsNullOrWhiteSpace(criterio))
-            {
-                string c = criterio.ToLower();
-                coincide &= 
-                    venta.ClienteComprador.Nombre.Contains(c, StringComparison.CurrentCultureIgnoreCase) ||
-                    venta.ClienteComprador.Apellido.Contains(c, StringComparison.CurrentCultureIgnoreCase) ||
-                    venta.UsuarioVendedor.Nombre.Contains(c, StringComparison.CurrentCultureIgnoreCase);
-            }
-
-            if (fecha.HasValue)
-                coincide &= venta.Fecha.Date == fecha.Value.Date;
-
-            if (cliente != null)
-                coincide &= venta.ClienteComprador == cliente;
-
-            if (vendedor != null)
-                coincide &= venta.UsuarioVendedor == vendedor;
-
-            if (coincide)
-                resultados.Add(venta);
-        }
-        
-        return resultados;
-    }
-
-    public List<Venta> BuscarVentaComoUsuario(Usuario usuario, string criterio, DateTime? fecha)
-    {
-        List<Venta> resultados = new List<Venta>();
-        string c = criterio?.ToLower();
-
-        // 1. Ventas propias
-        foreach (var venta in usuario.ListaVentas)
-        {
-            if (CoincideUsuario(venta, c, fecha))
-                resultados.Add(venta);
-        }
-
-        // 2. Ventas de clientes asignados
-        foreach (Cliente cliente in usuario.ClientesAsignados)
-        {
-            foreach (Venta venta in cliente.ListaVentas)
-            {
-                if (CoincideUsuario(venta, c, fecha))
-                    resultados.Add(venta);
-            }
-        }
-
-        return resultados;
-    }
-
-    private bool CoincideUsuario(Venta venta, string criterio, DateTime? fecha)
-    {
-        bool coincide = true;
-
-        if (!string.IsNullOrWhiteSpace(criterio))
-        {
-            criterio = criterio.ToLower();
-
-            bool coincideTexto =
-                venta.ClienteComprador.Nombre.Contains(criterio, StringComparison.CurrentCultureIgnoreCase) ||
-                venta.ClienteComprador.Apellido.Contains(criterio, StringComparison.CurrentCultureIgnoreCase) ||
-                venta.ClienteComprador.Genero.Contains(criterio, StringComparison.CurrentCultureIgnoreCase) ||
-                venta.ClienteComprador.Email.Contains(criterio, StringComparison.CurrentCultureIgnoreCase) ||
-                venta.ClienteComprador.Telefono.Contains(criterio, StringComparison.CurrentCultureIgnoreCase);
-
-            coincide &= coincideTexto;
-        }
-
-        if (fecha.HasValue)
-            coincide &= venta.Fecha.Date == fecha.Value.Date;
-
-        return coincide;
-    }
-
+    /// <summary>
+    /// Crea un objeto producto y lo agrega a la venta dada.
+    /// </summary>
+    /// <param name="venta"></param>
+    /// <param name="nombre"></param>
+    /// <param name="precio"></param>
+    /// <param name="cantidad"></param>
+    /// <exception cref="ArgumentException"></exception>
     public void AgregarProducto(Venta venta, string nombre, double precio, int cantidad)
     {
             ArgumentNullException.ThrowIfNull(venta);
@@ -158,6 +62,14 @@ namespace ClassLibrary
     
    
     
+    /// <summary>
+    /// Se encarga de obtener las ventas de un usuario que estén en medio entre la fecha de inicio y final dadas
+    /// </summary>
+    /// <param name="usuario"></param>
+    /// <param name="inicio"></param>
+    /// <param name="fin"></param>
+    /// <returns></returns>
+    /// <exception cref="UsuarioNuloException"></exception>
     public List<Venta> ObtenerVentasPeriodo(Usuario usuario, DateTime inicio, DateTime fin)
     {
         if (usuario == null)

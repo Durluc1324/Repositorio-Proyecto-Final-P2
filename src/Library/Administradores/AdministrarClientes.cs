@@ -109,6 +109,12 @@ namespace ClassLibrary
         return clientesEncontrados;
     }
     
+    /// <summary>
+    /// Permite buscar a los clientes en la lista global que tiene esta clase
+    /// </summary>
+    /// <param name="criterio"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     public List<Cliente> BuscarClientesEnGlobal( string criterio)
     {
         if (string.IsNullOrWhiteSpace(criterio))
@@ -146,6 +152,14 @@ namespace ClassLibrary
         return clientesEncontrados;
     }
 
+    /// <summary>
+    /// Permite agregar una etiqueta al cliente
+    /// </summary>
+    /// <param name="solicitante"></param>
+    /// <param name="cliente"></param>
+    /// <param name="etiqueta"></param>
+    /// <exception cref="UnauthorizedAccessException"></exception>
+    /// <exception cref="InvalidOperationException"></exception>
     public void AgregarEtiquetaCliente(Usuario solicitante, Cliente cliente, string etiqueta)
     {
         if (cliente.UsuarioAsignado != solicitante && solicitante.Rol != TipoRol.ADMINISTRADOR)
@@ -156,11 +170,22 @@ namespace ClassLibrary
             cliente.Etiquetas.Add(etiqueta);
     }
 
+    /// <summary>
+    /// Devuelve la lista de los clientes que tiene un usuario
+    /// </summary>
+    /// <param name="usuario"></param>
+    /// <returns></returns>
     public List<Cliente> VerClientesPropios(Usuario usuario)
     {
         return usuario.ClientesAsignados;
     }
 
+    /// <summary>
+    /// Como dice su nombre, asigna un cliente a otro vendedor
+    /// </summary>
+    /// <param name="vendedor"></param>
+    /// <param name="cliente"></param>
+    /// <param name="vendedorNuevo"></param>
     public void AsignarClienteAOtroVendedor(Vendedor vendedor, Cliente cliente, Vendedor vendedorNuevo)
     {
         vendedor.ClientesAsignados.Remove(cliente);
@@ -168,6 +193,13 @@ namespace ClassLibrary
         cliente.UsuarioAsignado = vendedorNuevo;
     }
 
+    /// <summary>
+    /// Aquí busca los clientes que no se han tenido interacciones desde cierta fecha. Los clientes con los que no se haya
+    /// interacctado después de esa fecha son los que el método devuelve
+    /// </summary>
+    /// <param name="usuario"></param>
+    /// <param name="fecha"></param>
+    /// <returns></returns>
     public List<Cliente> BuscarClientesSinInteraccionDesde(Usuario usuario, DateTime fecha)
     {
         List<Cliente> clientesInactivos = new List<Cliente>();

@@ -55,7 +55,7 @@ public class BuscarClientesSinInteraccionCommand: ModuleBase<SocketCommandContex
             await ReplyAsync("La fecha ingresada no es válida.");
             return;
         }
-
+        
         List<Cliente> resultado = Fachada.FachadaSistema.DelegarBuscarClientesSinInteraccionDesde(vendedor, fechaBusqueda);
         
 

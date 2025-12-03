@@ -72,7 +72,7 @@ public class Fachada
     {
         return AdministrarInteracciones.Instancia.ObtenerInteraccionesDe(usuario);
     }
-
+    
 
     public Llamada DelegarCrearLlamada(Usuario emisor, Persona receptor, DateTime fecha, string tema)
     {

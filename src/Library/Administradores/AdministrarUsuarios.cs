@@ -21,6 +21,18 @@ namespace ClassLibrary
 
 
     // Crear usuario (solo admin)
+    /// <summary>
+    /// Crea una instancia de usuario
+    /// </summary>
+    /// <param name="solicitante"></param>
+    /// <param name="nombre"></param>
+    /// <param name="apellido"></param>
+    /// <param name="email"></param>
+    /// <param name="telefono"></param>
+    /// <param name="contraseña"></param>
+    /// <param name="rol"></param>
+    /// <returns></returns>
+    /// <exception cref="UnauthorizedAccessException"></exception>
     public Usuario CrearUsuario(Usuario solicitante, string nombre, string apellido, string email, string telefono, string contraseña, string rol)
     {
         if (solicitante.Rol != TipoRol.ADMINISTRADOR)
@@ -46,6 +58,12 @@ namespace ClassLibrary
     }
     
 
+    /// <summary>
+    /// Elimina al usuario de la lista global y no puede acceder al sistema
+    /// </summary>
+    /// <param name="solicitante"></param>
+    /// <param name="usuario"></param>
+    /// <exception cref="UnauthorizedAccessException"></exception>
     public void EliminarUsuario(Usuario solicitante, Usuario usuario)
     {
         if (solicitante.Rol != TipoRol.ADMINISTRADOR)
@@ -54,6 +72,12 @@ namespace ClassLibrary
         _usuarios.Remove(usuario);
     }
 
+    /// <summary>
+    /// Suspende al usuario, negandole el acceso al sistema
+    /// </summary>
+    /// <param name="solicitante"></param>
+    /// <param name="usuario"></param>
+    /// <exception cref="UnauthorizedAccessException"></exception>
     public void SuspenderUsuario(Usuario solicitante, Usuario usuario)
     {
         if (solicitante.Rol != TipoRol.ADMINISTRADOR)
@@ -65,6 +89,12 @@ namespace ClassLibrary
         usuario.Suspendido = true;
     }
 
+    /// <summary>
+    /// Rehab
+    /// </summary>
+    /// <param name="solicitante"></param>
+    /// <param name="usuario"></param>
+    /// <exception cref="UnauthorizedAccessException"></exception>
     public void RehabilitarUsuario(Usuario solicitante, Usuario usuario)
     {
         if (solicitante.Rol != TipoRol.ADMINISTRADOR)

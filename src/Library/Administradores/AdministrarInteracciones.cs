@@ -21,6 +21,14 @@ namespace ClassLibrary
 
     // ---------- MÉTODOS PARA CREAR INTERACCIONES ----------
 
+    /// <summary>
+    /// Crea un registro de una llamada realizada de un cliente a otro y permite anotar el tema de la llamada
+    /// </summary>
+    /// <param name="emisor"></param>
+    /// <param name="receptor"></param>
+    /// <param name="fecha"></param>
+    /// <param name="tema"></param>
+    /// <returns></returns>
     public Llamada CrearLlamada(Usuario emisor, Persona receptor, DateTime fecha, string tema)
     {
         ValidarUsuario(emisor);
@@ -30,6 +38,14 @@ namespace ClassLibrary
         return llamada;
     }
 
+    /// <summary>
+    /// Registra los mensajes que se comunica entre otra persona, ya sea un cliente, otro vendedor u otro administrador
+    /// </summary>
+    /// <param name="emisor"></param>
+    /// <param name="receptor"></param>
+    /// <param name="fecha"></param>
+    /// <param name="tema"></param>
+    /// <returns></returns>
     public Mensaje CrearMensaje(Persona emisor, Persona receptor, DateTime fecha, string tema)
     {
         if (emisor is Usuario u)
@@ -43,6 +59,15 @@ namespace ClassLibrary
         return mensaje;
     }
 
+    /// <summary>
+    /// Crea y devuelve una instancia del tipo Email para tener registro de los mails que el usuario quiere guardar
+    /// </summary>
+    /// <param name="emisor"></param>
+    /// <param name="receptor"></param>
+    /// <param name="fecha"></param>
+    /// <param name="tema"></param>
+    /// <param name="contenido"></param>
+    /// <returns></returns>
     public Email CrearEmail(Persona emisor, Persona receptor, DateTime fecha, string tema, string contenido)
     {
         if (emisor is Usuario u)
@@ -55,6 +80,15 @@ namespace ClassLibrary
         return email;
     }
 
+    /// <summary>
+    /// Crea y devuelve una instancia de un objeto tipo Reuniones
+    /// </summary>
+    /// <param name="emisor"></param>
+    /// <param name="receptor"></param>
+    /// <param name="fecha"></param>
+    /// <param name="tema"></param>
+    /// <param name="lugar"></param>
+    /// <returns></returns>
     public Reuniones CrearReunion(Usuario emisor, Persona receptor, DateTime fecha, string tema, string lugar)
     {
         ValidarUsuario(emisor);
@@ -66,6 +100,14 @@ namespace ClassLibrary
 
     // ---------- MÉTODOS DE CONSULTA ----------
 
+    /// <summary>
+    /// Método no implementado
+    /// Permite ver las interacciones del cliente según el tipo, la fecha o ninguno
+    /// </summary>
+    /// <param name="cliente"></param>
+    /// <param name="tipo"></param>
+    /// <param name="fecha"></param>
+    /// <returns></returns>
     public List<Interaccion> VerInteraccionesCliente(Cliente cliente, Type? tipo = null, DateTime? fecha = null)
     {
         var resultado = new List<Interaccion>();
@@ -84,6 +126,11 @@ namespace ClassLibrary
         return resultado;
     }
 
+    /// <summary>
+    /// Método que se encarga de devolver la lista de interacciones del usuario
+    /// </summary>
+    /// <param name="usuario"></param>
+    /// <returns></returns>
     public List<Interaccion> ObtenerInteraccionesDe(Usuario usuario)
     {
         return usuario.ListaInteracciones;
@@ -91,6 +138,11 @@ namespace ClassLibrary
 
     // ---------- MÉTODOS DE MODIFICACIÓN ----------
 
+    /// <summary>
+    /// Agrega una nota a la interacción vacía
+    /// </summary>
+    /// <param name="interaccion"></param>
+    /// <param name="nota"></param>
     public void AgregarNota(Interaccion interaccion, string nota)
     {
         interaccion.AddNota(nota);
@@ -98,14 +150,15 @@ namespace ClassLibrary
     
 
     // ---------- MÉTODOS AUXILIARES ----------
-
+    //Es un metodo que valida que el usuario no esté suspendido. Por falta de tiempo no pudo ser implementado en los métodos que debería
     private void ValidarUsuario(Usuario usuario)
     {
         if (usuario.Suspendido)
             throw new InvalidOperationException("Usuario suspendido.");
     }
 
-
+    ///Hecho para actualizar las notas, revisa cuales interacciones no fueron respondidas cada que se llama. Esto le
+    /// Sería útil al usuario porque 
     private void ActualizarInteraccionesNoRespondidas(Usuario usuario)
     {
         // 1. Reiniciar solo Emails y Mensajes

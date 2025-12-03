@@ -16,11 +16,17 @@ namespace ClassLibrary
     {
     }
     
-    /*
-     * CrearCotizacion(): Crea una cotización a partir de los parámetros que recibe: un usuario, un cliente, una fecha
-     * (se asume que es la fecha de creación de la cotización), una fecha límite para la cotización y la descripción de
-     * esta.
-     */
+    
+    /// <summary>
+    /// Se encarga de crear una instancia de una cotización
+    /// </summary>
+    /// <param name="creador"></param>
+    /// <param name="cliente"></param>
+    /// <param name="fecha"></param>
+    /// <param name="fechaLimite"></param>
+    /// <param name="descripcion"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
     public Cotizacion CrearCotizacion(Usuario creador, Cliente cliente,
         DateTime fecha, DateTime fechaLimite, string descripcion)
     {
