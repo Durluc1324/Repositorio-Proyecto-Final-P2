@@ -9,7 +9,26 @@ public class Fachada
     private static readonly Fachada _fachada = new Fachada();
     public static Fachada FachadaSistema => _fachada;
     //Llamada a métodos de AdminsitrarCLientes.
+
     
+    //Primer método de la HU 1
+    public List<Cliente> DelegarClientesConVentasMayoresOMenoresAMonto(Usuario usuario, string monto, string sign)
+    {
+        return AdministrarClientes.Instancia.ClientesConVentasMayoresOMenoresAMonto(usuario, monto, sign);
+    }
+    
+    //Segundo método de la HU 1
+    public Dictionary<Cliente, string> DelegarClientesConMontoEntreRango(Usuario usuario, string monto1, string monto2)
+    {
+        return AdministrarClientes.Instancia.ClientesConMontoEntreRango(usuario, monto1, monto2);
+    }
+
+    //Método de la HU 2
+    public List<Cliente> DelegarClientesConVentaOServicio(Usuario usuario, string productoOServicio)
+    {
+        return AdministrarClientes.Instancia.ClientesConVentaOServicio(usuario, productoOServicio);
+    }
+
 
     public Cliente DelegarCrearCliente(Usuario solicitante, string nombre, string apellido, string email,
         string telefono, string genero, DateTime fechaNacimiento)
@@ -60,7 +79,6 @@ public class Fachada
         return AdministrarCotizaciones.Instancia.CrearCotizacion(creador, cliente, fecha, fechaLimite, descripcion);
     }
     
-
     public List<Cliente> DelegarBuscarClientesSinInteraccionDesde(Usuario usuario, DateTime fecha)
     {
         return AdministrarClientes.Instancia.BuscarClientesSinInteraccionDesde(usuario, fecha);

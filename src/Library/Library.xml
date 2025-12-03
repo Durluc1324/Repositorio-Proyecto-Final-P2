@@ -18,6 +18,197 @@
             <returns></returns>
             <exception cref="T:System.InvalidOperationException"></exception>
         </member>
+        <member name="M:ClassLibrary.AdministrarClientes.BuscarClientesEnGlobal(System.String)">
+            <summary>
+            Permite buscar a los clientes en la lista global que tiene esta clase
+            </summary>
+            <param name="criterio"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:ClassLibrary.AdministrarClientes.AgregarEtiquetaCliente(ClassLibrary.Usuario,ClassLibrary.Cliente,System.String)">
+            <summary>
+            Permite agregar una etiqueta al cliente
+            </summary>
+            <param name="solicitante"></param>
+            <param name="cliente"></param>
+            <param name="etiqueta"></param>
+            <exception cref="T:System.UnauthorizedAccessException"></exception>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:ClassLibrary.AdministrarClientes.VerClientesPropios(ClassLibrary.Usuario)">
+            <summary>
+            Devuelve la lista de los clientes que tiene un usuario
+            </summary>
+            <param name="usuario"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ClassLibrary.AdministrarClientes.AsignarClienteAOtroVendedor(ClassLibrary.Vendedor,ClassLibrary.Cliente,ClassLibrary.Vendedor)">
+            <summary>
+            Como dice su nombre, asigna un cliente a otro vendedor
+            </summary>
+            <param name="vendedor"></param>
+            <param name="cliente"></param>
+            <param name="vendedorNuevo"></param>
+        </member>
+        <member name="M:ClassLibrary.AdministrarClientes.BuscarClientesSinInteraccionDesde(ClassLibrary.Usuario,System.DateTime)">
+            <summary>
+            Aquí busca los clientes que no se han tenido interacciones desde cierta fecha. Los clientes con los que no se haya
+            interacctado después de esa fecha son los que el método devuelve
+            </summary>
+            <param name="usuario"></param>
+            <param name="fecha"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ClassLibrary.AdministrarCotizaciones.CrearCotizacion(ClassLibrary.Usuario,ClassLibrary.Cliente,System.DateTime,System.DateTime,System.String)">
+            <summary>
+            Se encarga de crear una instancia de una cotización
+            </summary>
+            <param name="creador"></param>
+            <param name="cliente"></param>
+            <param name="fecha"></param>
+            <param name="fechaLimite"></param>
+            <param name="descripcion"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:ClassLibrary.AdministrarInteracciones.CrearLlamada(ClassLibrary.Usuario,ClassLibrary.Persona,System.DateTime,System.String)">
+            <summary>
+            Crea un registro de una llamada realizada de un cliente a otro y permite anotar el tema de la llamada
+            </summary>
+            <param name="emisor"></param>
+            <param name="receptor"></param>
+            <param name="fecha"></param>
+            <param name="tema"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ClassLibrary.AdministrarInteracciones.CrearMensaje(ClassLibrary.Persona,ClassLibrary.Persona,System.DateTime,System.String)">
+            <summary>
+            Registra los mensajes que se comunica entre otra persona, ya sea un cliente, otro vendedor u otro administrador
+            </summary>
+            <param name="emisor"></param>
+            <param name="receptor"></param>
+            <param name="fecha"></param>
+            <param name="tema"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ClassLibrary.AdministrarInteracciones.CrearEmail(ClassLibrary.Persona,ClassLibrary.Persona,System.DateTime,System.String,System.String)">
+            <summary>
+            Crea y devuelve una instancia del tipo Email para tener registro de los mails que el usuario quiere guardar
+            </summary>
+            <param name="emisor"></param>
+            <param name="receptor"></param>
+            <param name="fecha"></param>
+            <param name="tema"></param>
+            <param name="contenido"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ClassLibrary.AdministrarInteracciones.CrearReunion(ClassLibrary.Usuario,ClassLibrary.Persona,System.DateTime,System.String,System.String)">
+            <summary>
+            Crea y devuelve una instancia de un objeto tipo Reuniones
+            </summary>
+            <param name="emisor"></param>
+            <param name="receptor"></param>
+            <param name="fecha"></param>
+            <param name="tema"></param>
+            <param name="lugar"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ClassLibrary.AdministrarInteracciones.VerInteraccionesCliente(ClassLibrary.Cliente,System.Type,System.Nullable{System.DateTime})">
+            <summary>
+            Método no implementado
+            Permite ver las interacciones del cliente según el tipo, la fecha o ninguno
+            </summary>
+            <param name="cliente"></param>
+            <param name="tipo"></param>
+            <param name="fecha"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ClassLibrary.AdministrarInteracciones.ObtenerInteraccionesDe(ClassLibrary.Usuario)">
+            <summary>
+            Método que se encarga de devolver la lista de interacciones del usuario
+            </summary>
+            <param name="usuario"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ClassLibrary.AdministrarInteracciones.AgregarNota(ClassLibrary.Interaccion,System.String)">
+            <summary>
+            Agrega una nota a la interacción vacía
+            </summary>
+            <param name="interaccion"></param>
+            <param name="nota"></param>
+        </member>
+        <member name="M:ClassLibrary.AdministrarInteracciones.ActualizarInteraccionesNoRespondidas(ClassLibrary.Usuario)">
+            Hecho para actualizar las notas, revisa cuales interacciones no fueron respondidas cada que se llama. Esto le
+             Sería útil al usuario porque 
+        </member>
+        <member name="M:ClassLibrary.AdministrarUsuarios.CrearUsuario(ClassLibrary.Usuario,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Crea una instancia de usuario
+            </summary>
+            <param name="solicitante"></param>
+            <param name="nombre"></param>
+            <param name="apellido"></param>
+            <param name="email"></param>
+            <param name="telefono"></param>
+            <param name="contraseña"></param>
+            <param name="rol"></param>
+            <returns></returns>
+            <exception cref="T:System.UnauthorizedAccessException"></exception>
+        </member>
+        <member name="M:ClassLibrary.AdministrarUsuarios.EliminarUsuario(ClassLibrary.Usuario,ClassLibrary.Usuario)">
+            <summary>
+            Elimina al usuario de la lista global y no puede acceder al sistema
+            </summary>
+            <param name="solicitante"></param>
+            <param name="usuario"></param>
+            <exception cref="T:System.UnauthorizedAccessException"></exception>
+        </member>
+        <member name="M:ClassLibrary.AdministrarUsuarios.SuspenderUsuario(ClassLibrary.Usuario,ClassLibrary.Usuario)">
+            <summary>
+            Suspende al usuario, negandole el acceso al sistema
+            </summary>
+            <param name="solicitante"></param>
+            <param name="usuario"></param>
+            <exception cref="T:System.UnauthorizedAccessException"></exception>
+        </member>
+        <member name="M:ClassLibrary.AdministrarUsuarios.RehabilitarUsuario(ClassLibrary.Usuario,ClassLibrary.Usuario)">
+            <summary>
+            Rehab
+            </summary>
+            <param name="solicitante"></param>
+            <param name="usuario"></param>
+            <exception cref="T:System.UnauthorizedAccessException"></exception>
+        </member>
+        <member name="M:ClassLibrary.AdministrarVentas.CrearVenta(ClassLibrary.Usuario,ClassLibrary.Cliente,System.DateTime)">
+            <summary>
+            Crea una instancia de una venta
+            </summary>
+            <param name="usuario"></param>
+            <param name="cliente"></param>
+            <param name="fecha"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ClassLibrary.AdministrarVentas.AgregarProducto(ClassLibrary.Venta,System.String,System.Double,System.Int32)">
+            <summary>
+            Crea un objeto producto y lo agrega a la venta dada.
+            </summary>
+            <param name="venta"></param>
+            <param name="nombre"></param>
+            <param name="precio"></param>
+            <param name="cantidad"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:ClassLibrary.AdministrarVentas.ObtenerVentasPeriodo(ClassLibrary.Usuario,System.DateTime,System.DateTime)">
+            <summary>
+            Se encarga de obtener las ventas de un usuario que estén en medio entre la fecha de inicio y final dadas
+            </summary>
+            <param name="usuario"></param>
+            <param name="inicio"></param>
+            <param name="fin"></param>
+            <returns></returns>
+            <exception cref="T:ClassLibrary.Excepciones.UsuarioNuloException"></exception>
+        </member>
         <member name="T:ClassLibrary.IBot">
             <summary>
             La interfaz del Bot de Discord para usar con inyección de dependencias.

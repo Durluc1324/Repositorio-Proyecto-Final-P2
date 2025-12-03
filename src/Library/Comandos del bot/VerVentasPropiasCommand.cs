@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using ClassLibrary;
 using Discord.Commands;
 namespace Library.Comandos_del_bot;
-
+//1) Comando que retorne los clientes con ventas mayores o menores a cierto monto o dentro de un cierto rango de montos
+//2) Comando que retorne los clientes con ventas de cierto producto o servicio
 public class VerVentasPropiasCommand: ModuleBase<SocketCommandContext>
 {
     private readonly SessionService sessions;
