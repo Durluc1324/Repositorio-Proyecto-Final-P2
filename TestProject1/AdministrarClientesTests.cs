@@ -8,6 +8,14 @@ public class AdministrarClientesTests
     private Administrador admin;
     private Vendedor vendedor;
     private Vendedor otroVendedor;
+    private Vendedor vendedorParaDefensa;
+    private Venta venta1;
+    private Venta venta2;
+    private Venta venta3;
+    private Venta venta4;
+    private Cliente c1;
+    private Cliente c2;
+
 
     [TestInitialize]
     public void Setup()
@@ -19,9 +27,8 @@ public class AdministrarClientesTests
         vendedor = new Vendedor("V", "Uno", "v1@test.com", "091000001");
         otroVendedor = new Vendedor("V", "Dos", "v2@test.com", "091000002");
 
-        // Registrar usuarios en el admin (si lo necesitás)
-        AdministrarUsuarios.Instancia.CrearUsuario(admin, vendedor.Nombre, vendedor.Apellido, vendedor.Email, vendedor.Telefono, "1234","vendedor");
-        AdministrarUsuarios.Instancia.CrearUsuario(admin, otroVendedor.Nombre, otroVendedor.Apellido, otroVendedor.Email, otroVendedor.Telefono, "1234","vendedor");
+
+
     }
 
     [TestCleanup]
@@ -29,6 +36,7 @@ public class AdministrarClientesTests
     {
         AdministrarClientes.Instancia.LimpiarParaTest();
         AdministrarUsuarios.Instancia.LimpiarParaTest();
+        AdministrarVentas.Instancia.LimpiarParaTest();
     }
 
     private Cliente CrearClienteEjemplo(Usuario solicitante)
@@ -103,14 +111,16 @@ public class AdministrarClientesTests
     [TestMethod]
     public void BuscarClientes_DeberiaEncontrarPorNombreYApeEmailTelefono()
     {
-        var c1 = AdministrarClientes.Instancia.CrearCliente(admin, "Carlos", "Perez", "carlos@a.com", "100", "M", DateTime.Now);
-        var c2 = AdministrarClientes.Instancia.CrearCliente(admin, "Ana", "Lopez", "ana@b.com", "200", "F", DateTime.Now);
+        var c1 = AdministrarClientes.Instancia.CrearCliente(admin, "Carlos", "Perez", "carlos@a.com", "100", "M",
+            DateTime.Now);
+        var c2 = AdministrarClientes.Instancia.CrearCliente(admin, "Ana", "Lopez", "ana@b.com", "200", "F",
+            DateTime.Now);
 
-        var res1 = AdministrarClientes.Instancia.BuscarClientes(admin,"Carlos");
+        var res1 = AdministrarClientes.Instancia.BuscarClientes(admin, "Carlos");
         Assert.IsTrue(res1.Contains(c1));
         Assert.IsFalse(res1.Contains(c2));
 
-        var res2 = AdministrarClientes.Instancia.BuscarClientes(admin,"ana@b.com");
+        var res2 = AdministrarClientes.Instancia.BuscarClientes(admin, "ana@b.com");
         Assert.IsTrue(res2.Contains(c2));
     }
 
@@ -120,7 +130,7 @@ public class AdministrarClientesTests
         var c = AdministrarClientes.Instancia.CrearCliente(admin, "P", "Q", "p@q.com", "300", "X", DateTime.Now);
         AdministrarClientes.Instancia.AgregarEtiquetaCliente(admin, c, "VIP");
 
-        List<Cliente> res = AdministrarClientes.Instancia.BuscarClientes(admin,"VIP");
+        List<Cliente> res = AdministrarClientes.Instancia.BuscarClientes(admin, "VIP");
         Assert.IsTrue(res.Contains(c));
     }
 
@@ -141,14 +151,16 @@ public class AdministrarClientesTests
     [ExpectedException(typeof(UnauthorizedAccessException))]
     public void AgregarEtiquetaCliente_OtroVendedorNoAdmin_DeberiaLanzar()
     {
-        var c = AdministrarClientes.Instancia.CrearCliente(vendedor, "Cl2", "Ux2", "x2@x.com", "401", "X", DateTime.Now);
+        var c = AdministrarClientes.Instancia.CrearCliente(vendedor, "Cl2", "Ux2", "x2@x.com", "401", "X",
+            DateTime.Now);
         AdministrarClientes.Instancia.AgregarEtiquetaCliente(otroVendedor, c, "bad");
     }
 
     [TestMethod]
     public void AsignarClienteAOtroVendedor_DeberiaMoverYActualizarUsuarioAsignado()
     {
-        var cliente = AdministrarClientes.Instancia.CrearCliente(vendedor, "Asig", "Cli", "as@c.com", "500", "X", DateTime.Now);
+        var cliente =
+            AdministrarClientes.Instancia.CrearCliente(vendedor, "Asig", "Cli", "as@c.com", "500", "X", DateTime.Now);
         Assert.IsTrue(vendedor.ClientesAsignados.Contains(cliente));
 
         AdministrarClientes.Instancia.AsignarClienteAOtroVendedor(vendedor, cliente, otroVendedor);
@@ -156,5 +168,108 @@ public class AdministrarClientesTests
         Assert.IsFalse(vendedor.ClientesAsignados.Contains(cliente));
         Assert.IsTrue(otroVendedor.ClientesAsignados.Contains(cliente));
         Assert.AreSame(otroVendedor, cliente.UsuarioAsignado);
+    }
+
+    [TestMethod]
+    public void ClentesConMontoEntreRango_Debe_Devolver_1()
+    {
+        vendedorParaDefensa = new Vendedor("Vendedor", "Defensa", "vendedorDefensa@gmail.com", "012543");
+        c1 = new Cliente("C", "1", "c1@gmail.com", "1122", "hombre", DateTime.Now, vendedorParaDefensa);
+        c2 = new Cliente("C", "2", "c2@gmail.com", "5566", "hombre", DateTime.Now, vendedorParaDefensa);
+        venta1 = new Venta(c1, vendedorParaDefensa, DateTime.Now);
+        venta2 = new Venta(c1, vendedorParaDefensa, DateTime.Now);
+        venta3 = new Venta(c2, vendedorParaDefensa, DateTime.Now);
+        venta4 = new Venta(c2, vendedorParaDefensa, DateTime.Now);
+        venta1.AgregarProducto(new Producto("cargador", 150), 1);
+        venta2.AgregarProducto(new Producto("tablet", 1000), 1);
+        venta3.AgregarProducto(new Producto("airfryer", 3000), 1);
+        venta4.AgregarProducto(new Producto("telefono", 16000), 1);
+
+        var resultado = AdministrarClientes.Instancia.ClientesConMontoEntreRango(vendedorParaDefensa, "500", "1500");
+
+        Assert.AreEqual(1, resultado.Count);
+    }
+
+    [TestMethod]
+    public void ClentesConMontoEntreRango_Debe_Devolver_0()
+    {
+        vendedorParaDefensa = new Vendedor("Vendedor", "Defensa", "vendedorDefensa@gmail.com", "012543");
+        c1 = new Cliente("C", "1", "c1@gmail.com", "1122", "hombre", DateTime.Now, vendedorParaDefensa);
+        c2 = new Cliente("C", "2", "c2@gmail.com", "5566", "hombre", DateTime.Now, vendedorParaDefensa);
+        venta1 = new Venta(c1, vendedorParaDefensa, DateTime.Now);
+        venta2 = new Venta(c1, vendedorParaDefensa, DateTime.Now);
+        venta3 = new Venta(c2, vendedorParaDefensa, DateTime.Now);
+        venta4 = new Venta(c2, vendedorParaDefensa, DateTime.Now);
+        venta1.AgregarProducto(new Producto("cargador", 150), 1);
+        venta2.AgregarProducto(new Producto("tablet", 1000), 1);
+        venta3.AgregarProducto(new Producto("airfryer", 3000), 1);
+        venta4.AgregarProducto(new Producto("telefono", 16000), 1);
+
+        var resultado = AdministrarClientes.Instancia.ClientesConMontoEntreRango(vendedorParaDefensa, "1", "2");
+
+        Assert.AreEqual(0, resultado.Count);
+    }
+
+    [TestMethod]
+
+    public void ClienteCOnVentaOServicio_Debe_Devolver_1()
+    {
+        vendedorParaDefensa = new Vendedor("Vendedor", "Defensa", "vendedorDefensa@gmail.com", "012543");
+        c1 = new Cliente("C", "1", "c1@gmail.com", "1122", "hombre", DateTime.Now, vendedorParaDefensa);
+        c2 = new Cliente("C", "2", "c2@gmail.com", "5566", "hombre", DateTime.Now, vendedorParaDefensa);
+        venta1 = new Venta(c1, vendedorParaDefensa, DateTime.Now);
+        venta2 = new Venta(c1, vendedorParaDefensa, DateTime.Now);
+        venta3 = new Venta(c2, vendedorParaDefensa, DateTime.Now);
+        venta4 = new Venta(c2, vendedorParaDefensa, DateTime.Now);
+        venta1.AgregarProducto(new Producto("cargador", 150), 1);
+        venta2.AgregarProducto(new Producto("tablet", 1000), 1);
+        venta3.AgregarProducto(new Producto("airfryer", 3000), 1);
+        venta4.AgregarProducto(new Producto("telefono", 16000), 1);
+
+        var resultado = AdministrarClientes.Instancia.ClientesConVentaOServicio(vendedorParaDefensa, "tablet");
+
+        Assert.AreEqual(1, resultado.Count);
+
+    }
+
+    [TestMethod]
+    public void ClienteCOnVentaOServicio_Debe_Devolver_0()
+    {
+        vendedorParaDefensa = new Vendedor("Vendedor", "Defensa", "vendedorDefensa@gmail.com", "012543");
+        c1 = new Cliente("C", "1", "c1@gmail.com", "1122", "hombre", DateTime.Now, vendedorParaDefensa);
+        c2 = new Cliente("C", "2", "c2@gmail.com", "5566", "hombre", DateTime.Now, vendedorParaDefensa);
+        venta1 = new Venta(c1, vendedorParaDefensa, DateTime.Now);
+        venta2 = new Venta(c1, vendedorParaDefensa, DateTime.Now);
+        venta3 = new Venta(c2, vendedorParaDefensa, DateTime.Now);
+        venta4 = new Venta(c2, vendedorParaDefensa, DateTime.Now);
+        venta1.AgregarProducto(new Producto("cargador", 150), 1);
+        venta2.AgregarProducto(new Producto("tablet", 1000), 1);
+        venta3.AgregarProducto(new Producto("airfryer", 3000), 1);
+        venta4.AgregarProducto(new Producto("telefono", 16000), 1);
+
+        var resultado = AdministrarClientes.Instancia.ClientesConVentaOServicio(vendedorParaDefensa, "pc");
+
+        Assert.AreEqual(0, resultado.Count);
+
+    }
+
+    [TestMethod]
+    public void CLientesConVentasMayoresOMenoresAMonto_Debe_Ser_1()
+    {
+        vendedorParaDefensa = new Vendedor("Vendedor", "Defensa", "vendedorDefensa@gmail.com", "012543");
+        c1 = new Cliente("C", "1", "c1@gmail.com", "1122", "hombre", DateTime.Now, vendedorParaDefensa);
+        c2 = new Cliente("C", "2", "c2@gmail.com", "5566", "hombre", DateTime.Now, vendedorParaDefensa);
+        venta1 = new Venta(c1, vendedorParaDefensa, DateTime.Now);
+        venta2 = new Venta(c1, vendedorParaDefensa, DateTime.Now);
+        venta3 = new Venta(c2, vendedorParaDefensa, DateTime.Now);
+        venta4 = new Venta(c2, vendedorParaDefensa, DateTime.Now);
+        venta1.AgregarProducto(new Producto("cargador", 150), 1);
+        venta2.AgregarProducto(new Producto("tablet", 1000), 1);
+        venta3.AgregarProducto(new Producto("airfryer", 3000), 1);
+        venta4.AgregarProducto(new Producto("telefono", 16000), 1);
+
+        var resultado = AdministrarClientes.Instancia.ClientesConVentasMayoresOMenoresAMonto(vendedorParaDefensa, "1500", ">");
+
+        Assert.AreEqual(1, resultado.Count);
     }
 }

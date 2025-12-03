@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace ClassLibrary
 {
@@ -251,5 +252,179 @@ namespace ClassLibrary
     {
         return _clientes;
     }
+    
+    //-----------------------------
+    //1) Comando que retorne los clientes con ventas mayores o menores a cierto monto o dentro de un cierto rango de montos
+    //-----------------------------
+    
+    public List<Cliente> ClientesConVentasMayoresOMenoresAMonto(Usuario usuario, string monto, string sign)
+    {
+        List<Cliente> clientesEncontrados = new List<Cliente>();
+
+        //transforma el monto dado a double (el comando del bot verifica que sea efectivamente un número que 
+        //pueda ser pasado a double o le informa al usuario, evitando qeu se ejecute el método innecesariamente
+        double montoAComparar = double.Parse(monto);
+
+        //Añade al resultado los clientes del usuario que en su lista de ventas tengan una venta con total
+        //mayor al monto dado
+        if (sign == ">")
+        {
+            foreach (Cliente cliente in usuario.ClientesAsignados)
+            {
+                foreach (Venta venta in cliente.ListaVentas)
+                {
+                    if (venta.Total > montoAComparar)
+                    {
+                        clientesEncontrados.Add(cliente);
+                        break;
+                    }
+                       
+                }
+            }
+        }
+        
+        //Añade al resultado los clientes del usuario que en su lista de ventas tengan una venta con total
+        //menor al monto dado
+        if (sign == "<")
+        {
+            foreach (Cliente cliente in usuario.ClientesAsignados)
+            {
+                foreach (Venta venta in cliente.ListaVentas)
+                {
+                    if (venta.Total < montoAComparar)
+                    {
+                        clientesEncontrados.Add(cliente);
+                        break;
+                    }
+                        
+                }
+            }
+        }
+        
+        return clientesEncontrados;
+    }
+
+    public Dictionary<Cliente, string> ClientesConMontoEntreRango(Usuario usuario, string monto1, string monto2)
+    {
+        //Crea la lista de clientes a enviar
+        List<Cliente> clientesEncontrados = new List<Cliente>();
+        
+        //Se almacenan las ventas de los clientes que estén dentro del rango dado
+        List<Venta> ventasDentroDelRango = new List<Venta>();
+        
+        /*Pasa los montos a double, porque el total de las ventas fue definida en double y
+         no se generan errores
+        */
+        
+        double monto1double = double.Parse(monto1);
+
+        double monto2dluble = double.Parse(monto2);
+        
+        //En cada venta que tiene almacenado el usuario que ha realizado él, revisa si tiene ventas mayores
+        //al primer monto dado o menores al segundo monto dado
+        foreach (Venta venta in usuario.ListaVentas)
+        {
+            if (venta.Total >= monto1double && venta.Total <= monto2dluble)
+            {
+                //Si el cliente no está en la lista de clientes encontrados, se le añad
+                if (!clientesEncontrados.Contains(venta.ClienteComprador))
+                {
+                    clientesEncontrados.Add(venta.ClienteComprador);
+                }
+                
+                ventasDentroDelRango.Add(venta);
+            }
+        }
+        //Stringbuilder para construir el mensaje a envíar
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine("Clientes encontrados:");
+        
+        //Lo que devolverá el método
+        Dictionary<Cliente, string> resultado = new Dictionary<Cliente, string>();
+
+        
+        //Revisa en cada cliente encontrado 
+        foreach (Cliente cliente in clientesEncontrados)
+        {
+            sb.AppendLine($"Cliente {cliente.Nombre} {cliente.Apellido}");
+            sb.AppendLine($"-- VENTAS DEL CLIENTE --");
+            if (!resultado.Keys.Contains(cliente))
+            {
+                //Revisa entre las ventas encontradas
+                foreach (Venta venta in ventasDentroDelRango)
+                {
+                    //Si el cliente que tiene la venta coincide con el cliente actual que se está evaluando
+                    //enconces registrará la venta como parte de la venta del cliente.
+                    if (venta.ClienteComprador == cliente)
+                    {
+                        foreach (var producto in venta.Productos)
+                        {
+                            sb.AppendLine("----------------------------");
+
+                            sb.AppendLine($"Producto:{producto.Key.Nombre}");
+                            sb.AppendLine($"Precio: ${producto.Key.Precio}");
+                            sb.AppendLine($"Cantidad: {producto.Value}");
+                            sb.AppendLine($"Subtotal: {producto.Key.Precio * producto.Value}");
+                        }
+
+                        sb.AppendLine($"Total: {venta.Total}");
+
+                    }
+
+                    sb.AppendLine("----------------------------");
+
+                }
+
+                string datosCliente = sb.ToString();
+
+                //Añade el cliente y los datos al diccionario
+                resultado.Add(cliente, datosCliente);
+            }
+        }
+        
+        //Devuelve el diciconario con todos los datos.
+        return resultado;
+
+
+    }
+    //-----------------------------
+    //2) Comando que retorne los clientes con ventas de cierto producto o servicio
+    //-----------------------------
+
+    public List<Cliente> ClientesConVentaOServicio(Usuario usuario, string productoOServicio)
+    {
+        //Lista que devolverá el método
+        List<Cliente> resultado = new List<Cliente>();
+
+        //Se crea una lista auxiliar para encontrar todas las ventas que tengan ese producto.
+        List<Venta> ventasConElProducto = new List<Venta>();
+
+        foreach (Venta venta in usuario.ListaVentas)
+        {
+            foreach (var producto in venta.Productos)
+            {
+                //Si el nombre del producto coincide con el nombre dado, entonces se almacena la venta en las ventas encontradas
+                if (productoOServicio.Equals(producto.Key.Nombre, StringComparison.OrdinalIgnoreCase))
+                {
+                    ventasConElProducto.Add(venta);
+                    break;
+                }
+            }
+        }
+        //Revisamos cada venta, si el cliente no está, se agrega a la lista de resultados
+        foreach (Venta venta in ventasConElProducto)
+        {
+            if (!resultado.Contains(venta.ClienteComprador))
+            {
+                resultado.Add(venta.ClienteComprador);
+            }
+        }
+        
+        //retorna la lista con los clientes encontrados
+        return resultado;
+    }
+    
+    
+
 }
 }
